@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
+import pcloudSdk from 'pcloud-sdk-js';
 import { PcloudButton, ItemsList } from '.';
-import { getClient } from '../getToken';
-
 
 class App extends Component {
   constructor() {
@@ -12,8 +11,12 @@ class App extends Component {
     this._receiveToken = this._receiveToken.bind(this);
   }
 
+  _getClient(token) {
+    return pcloudSdk.createClient(token);
+  }
+
   _receiveToken(token) {
-    this.setState({ client: getClient(token) });
+    this.setState({ client: this._getClient(token) });
   }
 
   render() {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import pcloudSdk from 'pcloud-sdk-js';
 import { Item } from '.';
-import { getItems } from '../getItems';
 
 class ItemsList extends Component {
   constructor() {
@@ -14,7 +14,7 @@ class ItemsList extends Component {
   componentWillMount() {
     const { client } = this.props;
 
-    getItems(client).then(items => this.setState({ items: items }));
+    client.listfolder(0).then(res => res.contents).then(items => this.setState({ items: items }));
   }
 
   _renderRow({ id, name, isFolder }) {
