@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import pcloudSdk from 'pcloud-sdk-js';
+import styled from "styled-components";
 import { PcloudButton, ItemsList } from '.';
 
 class App extends Component {
@@ -23,14 +24,19 @@ class App extends Component {
     const { client } = this.state;
 
     return (
-      <div className="App">
+      <Wrapper>
         {client === null ?
           <PcloudButton receiveToken={this._receiveToken} /> :
           <ItemsList client={client} />
         }
-      </div>
+      </Wrapper>
     );
   }
 }
 
 export default App;
+
+const Wrapper = styled.div`
+  width: 100%;
+  margin: 0 auto;
+`
