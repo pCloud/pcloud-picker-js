@@ -16,14 +16,23 @@ class App extends Component {
           Map({
             folderId: 0,
             folderName: 'pCloud',
-            items: List()
+            items: null
           })
         ]
       )
     };
 
-    this._client = null;  
+    this._client = null;
     this._receiveToken = this._receiveToken.bind(this);
+    this._onFolderClick = this._onFolderClick.bind(this);
+  }
+
+  componentDidUpdate({ }, { path: prevPath }) {
+    const { path } = this.state;
+
+    if (path !== prevPath) {
+      this._setItems();
+    }
   }
 
   _receiveToken(token) {
@@ -47,11 +56,27 @@ class App extends Component {
       return
     }
 
-    if (items.size) {
+    if (items === null) {
       this._client.listfolder(folderId)
         .then(res => res.contents)
         .then(items => this.setState({ path: path.setIn([-1, 'items'], List(items.map(parseItem))) }));
     }
+  }
+
+  _onFolderClick(folderId, name) {
+    const { path } = this.state;
+
+    this.setState({
+      path: path.push(Map({
+        folderId: folderId,
+        folderName: name,
+        items: null
+      }))
+    });
+  }
+
+  _onFileClick() {
+
   }
 
   render() {
@@ -63,7 +88,10 @@ class App extends Component {
         {isReady ?
           <div>
             <Navigation path={path} />
-            <ItemsList items={items} />
+            {items !== null ?
+              <ItemsList items={items} onFolderClick={this._onFolderClick} /> :
+              null
+            }
           </div> :
           <PcloudButton receiveToken={this._receiveToken} />
         }

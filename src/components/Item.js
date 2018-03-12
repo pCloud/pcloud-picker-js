@@ -5,26 +5,25 @@ class Item extends Component {
   constructor() {
     super();
 
-    this._onNameClick = this._onNameClick.bind(this);
+    this._onClick = this._onClick.bind(this);
   }
 
-  _onNameClick() {
-    const { onClick, isFolder, id, name } = this.props;
+  _onClick() {
+    const { folderId, name, isFolder, onFolderClick } = this.props;
 
-    onClick(isFolder, id, name);
-    
+    if (isFolder) {
+      onFolderClick(folderId, name);
+    }
+
   }
 
   render() {
-    const { id, name, isFolder } = this.props;
+    const { id, name } = this.props;
 
     return (
       <Row key={id} className="row">
-        <Column checkbox>
-          <CheckBox type="checkbox" />
-        </Column>
         <Column>
-          <ItemName onClick={this._onNameClick}>{name}</ItemName>
+          <ItemName onClick={this._onClick}>{name}</ItemName>
         </Column>
       </Row>
     );
@@ -39,18 +38,12 @@ const Row = styled.div`
 
 const Column = styled.div`
   height: 37px;
-  width: ${props => props.checkbox ? 'auto' : '100%'};
+  width: 100%;
   padding-left: 10px;
   border: 1px solid #E9E9E9;
-  `;
-  
-  const CheckBox = styled.input`
-  vertical-align: top;
-  text-align: center;
-  border-right: none;
-  `;
-  
-  const ItemName = styled.div`
+`;
+
+const ItemName = styled.div`
   color: #000;
   padding-left: 0;
   border-left: none;

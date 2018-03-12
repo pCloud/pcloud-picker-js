@@ -7,30 +7,18 @@ class ItemsList extends Component {
     super();
     
     this._renderRow = this._renderRow.bind(this);
-    // this._onItemClick = this._onItemClick.bind(this);
   }
 
-  // _onItemClick(isFolder, folderId, name) {
-  //   if (isFolder) {
-  //     const { path } = this.state;
+  _renderRow({ id, folderId, name, isFolder }) {
+    const { onFolderClick } = this.props;
 
-  //     console.log("on item click",isFolder, folderId, name)
-      
-  //     this.setState({ path: path.concat({ folderId: folderId, name: name })})
-  //     console.log("on item click",this.state.path)
-  //     this._getItems()
-  //   }
-
-  // }
-
-  _renderRow({ id, folderid, name, isfolder }) {
     return (
       <Item
         key={id}
-        id={folderid}
+        id={folderId}
         name={name}
-        isFolder={isfolder}
-        onClick={this._onItemClick}
+        isFolder={isFolder}
+        onFolderClick={onFolderClick}
       />
     );
   }
