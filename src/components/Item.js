@@ -2,6 +2,19 @@ import React, { Component } from 'react';
 import styled from "styled-components";
 
 class Item extends Component {
+  constructor() {
+    super();
+
+    this._onNameClick = this._onNameClick.bind(this);
+  }
+
+  _onNameClick() {
+    const { onClick, isFolder, id, name } = this.props;
+
+    onClick(isFolder, id, name);
+    
+  }
+
   render() {
     const { id, name, isFolder } = this.props;
 
@@ -11,7 +24,7 @@ class Item extends Component {
           <CheckBox type="checkbox" />
         </Column>
         <Column>
-          <ItemName>{name}</ItemName>
+          <ItemName onClick={this._onNameClick}>{name}</ItemName>
         </Column>
       </Row>
     );

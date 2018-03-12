@@ -7,8 +7,9 @@ class App extends Component {
   constructor() {
     super()
 
-    this.state = { client: null };
+    this.state = { isReady: false };
 
+    this._client = null;
     this._receiveToken = this._receiveToken.bind(this);
   }
 
@@ -17,17 +18,21 @@ class App extends Component {
   }
 
   _receiveToken(token) {
-    this.setState({ client: this._getClient(token) });
+    this._client = this._getClient(token);
+
+    if (this._client !== null) {
+      this.setState({ isReady: true });
+    }
   }
 
   render() {
-    const { client } = this.state;
+    const { isReady } = this.state;
 
     return (
       <Wrapper>
-        {client === null ?
-          <PcloudButton receiveToken={this._receiveToken} /> :
-          <ItemsList client={client} />
+        {isReady ?
+           <ItemsList client={this._client} /> :
+           <PcloudButton receiveToken={this._receiveToken} />
         }
       </Wrapper>
     );

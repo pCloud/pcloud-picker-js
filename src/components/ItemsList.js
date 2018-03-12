@@ -6,26 +6,56 @@ class ItemsList extends Component {
   constructor() {
     super();
 
-    this.state = { items: [] }
+    this.state = { 
+      items: [],
+      path: [
+        {
+          folderId: 0,
+          name: 'pCloud'
+        }
+      ]
+    };
 
-    this._renderRow = this._renderRow.bind(this)
+    this._renderRow = this._renderRow.bind(this);
+    this._getItems = this._getItems.bind(this);
+    this._onItemClick = this._onItemClick.bind(this);
   }
 
   componentWillMount() {
-    const { client } = this.props;
+    this._getItems()
+  }
 
-    client.listfolder(0)
+  _getItems() {
+    const { client } = this.props;
+    const { path } = this.state;
+
+
+    client.listfolder(path[path.length -1].folderId)
       .then(res => res.contents)
       .then(items => this.setState({ items: items }));
   }
 
-  _renderRow({ id, name, isFolder }) {
+  _onItemClick(isFolder, folderId, name) {
+    if (isFolder) {
+      const { path } = this.state;
+
+      console.log("on item click",isFolder, folderId, name)
+      
+      this.setState({ path: path.concat({ folderId: folderId, name: name })})
+      console.log("on item click",this.state.path)
+      this._getItems()
+    }
+
+  }
+
+  _renderRow({ id, folderid, name, isfolder }) {
     return (
       <Item
         key={id}
-        id={id}
+        id={folderid}
         name={name}
-        isFolder={isFolder}
+        isFolder={isfolder}
+        onClick={this._onItemClick}
       />
     );
   }
