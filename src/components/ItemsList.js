@@ -5,48 +5,23 @@ import { Item } from '.';
 class ItemsList extends Component {
   constructor() {
     super();
-
-    this.state = { 
-      items: [],
-      path: [
-        {
-          folderId: 0,
-          name: 'pCloud'
-        }
-      ]
-    };
-
+    
     this._renderRow = this._renderRow.bind(this);
-    this._getItems = this._getItems.bind(this);
-    this._onItemClick = this._onItemClick.bind(this);
+    // this._onItemClick = this._onItemClick.bind(this);
   }
 
-  componentWillMount() {
-    this._getItems()
-  }
+  // _onItemClick(isFolder, folderId, name) {
+  //   if (isFolder) {
+  //     const { path } = this.state;
 
-  _getItems() {
-    const { client } = this.props;
-    const { path } = this.state;
-
-
-    client.listfolder(path[path.length -1].folderId)
-      .then(res => res.contents)
-      .then(items => this.setState({ items: items }));
-  }
-
-  _onItemClick(isFolder, folderId, name) {
-    if (isFolder) {
-      const { path } = this.state;
-
-      console.log("on item click",isFolder, folderId, name)
+  //     console.log("on item click",isFolder, folderId, name)
       
-      this.setState({ path: path.concat({ folderId: folderId, name: name })})
-      console.log("on item click",this.state.path)
-      this._getItems()
-    }
+  //     this.setState({ path: path.concat({ folderId: folderId, name: name })})
+  //     console.log("on item click",this.state.path)
+  //     this._getItems()
+  //   }
 
-  }
+  // }
 
   _renderRow({ id, folderid, name, isfolder }) {
     return (
@@ -61,7 +36,7 @@ class ItemsList extends Component {
   }
 
   render() {
-    const { items } = this.state;
+    const { items } = this.props;
 
     return (
       <Table>

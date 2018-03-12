@@ -1,38 +1,71 @@
 import React, { Component } from 'react';
 import pcloudSdk from 'pcloud-sdk-js';
 import styled from "styled-components";
-import { PcloudButton, ItemsList } from '.';
+import { List, Map } from 'immutable';
+import { PcloudButton, Navigation, ItemsList } from '.';
+import { parseItem } from '../utils'
 
 class App extends Component {
   constructor() {
     super()
 
-    this.state = { isReady: false };
+    this.state = {
+      isReady: false,
+      path: List(
+        [
+          Map({
+            folderId: 0,
+            folderName: 'pCloud',
+            items: List()
+          })
+        ]
+      )
+    };
 
-    this._client = null;
+    this._client = null;  
     this._receiveToken = this._receiveToken.bind(this);
-  }
-
-  _getClient(token) {
-    return pcloudSdk.createClient(token);
   }
 
   _receiveToken(token) {
     this._client = this._getClient(token);
 
-    if (this._client !== null) {
-      this.setState({ isReady: true });
+    this._setItems();
+    this.setState({ isReady: true });
+  }
+
+  _getClient(token) {
+    //handle errors
+    return pcloudSdk.createClient(token);
+  }
+
+  _setItems() {
+    const { path } = this.state;
+    const folderId = path.last().get('folderId');
+    const items = path.last().get('items');
+
+    if (this._client === null) {
+      return
+    }
+
+    if (items.size) {
+      this._client.listfolder(folderId)
+        .then(res => res.contents)
+        .then(items => this.setState({ path: path.setIn([-1, 'items'], List(items.map(parseItem))) }));
     }
   }
 
   render() {
-    const { isReady } = this.state;
+    const { isReady, path } = this.state;
+    const items = path.last().get('items');
 
     return (
       <Wrapper>
         {isReady ?
-           <ItemsList client={this._client} /> :
-           <PcloudButton receiveToken={this._receiveToken} />
+          <div>
+            <Navigation path={path} />
+            <ItemsList items={items} />
+          </div> :
+          <PcloudButton receiveToken={this._receiveToken} />
         }
       </Wrapper>
     );
