@@ -14,7 +14,6 @@ class Item extends Component {
     if (isFolder) {
       onFolderClick(folderId, name);
     }
-
   }
 
   render() {

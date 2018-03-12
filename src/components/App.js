@@ -11,7 +11,9 @@ class App extends Component {
 
     this.state = {
       isReady: false,
-      path: List(
+      currentFolderId: 0,
+      path: List(),
+      folders: List(
         [
           Map({
             folderId: 0,
@@ -25,12 +27,14 @@ class App extends Component {
     this._client = null;
     this._receiveToken = this._receiveToken.bind(this);
     this._onFolderClick = this._onFolderClick.bind(this);
+    this._onFileClick = this._onFileClick.bind(this);
+    this._onNavigationClick = this._onNavigationClick.bind(this);
   }
 
-  componentDidUpdate({ }, { path: prevPath }) {
-    const { path } = this.state;
+  componentDidUpdate(prevProps, { folders: prevFolders }) {
+    const { folders } = this.state;
 
-    if (path !== prevPath) {
+    if (folders !== prevFolders) {
       this._setItems();
     }
   }
@@ -47,41 +51,58 @@ class App extends Component {
     return pcloudSdk.createClient(token);
   }
 
+  _fetchItems(client, folderId) {
+    return client.listfolder(folderId)
+      .then(res => res.contents)
+      .then(items => items.map(parseItem));
+  }
+
   _setItems() {
-    const { path } = this.state;
-    const folderId = path.last().get('folderId');
-    const items = path.last().get('items');
+    const { folders } = this.state;
+    const folderId = folders.last().get('folderId');
+    const items = folders.last().get('items');
 
     if (this._client === null) {
       return
     }
 
     if (items === null) {
-      this._client.listfolder(folderId)
-        .then(res => res.contents)
-        .then(items => this.setState({ path: path.setIn([-1, 'items'], List(items.map(parseItem))) }));
+      this._fetchItems(this._client, folderId)
+        .then(items => this.setState({
+          folders: folders.setIn([-1, 'items'], List(items))
+        }));
     }
   }
 
   _onFolderClick(folderId, name) {
-    const { path } = this.state;
+    const { folders } = this.state;
 
     this.setState({
-      path: path.push(Map({
+      folders: folders.push(Map({
         folderId: folderId,
         folderName: name,
         items: null
-      }))
+      })),
+      currentFolderId: folderId
     });
+  }
+  /*
+  _buildPath() {
+
   }
 
   _onFileClick() {
 
   }
 
+  _onNavigationClick() {
+
+  }
+  */
+
   render() {
-    const { isReady, path } = this.state;
-    const items = path.last().get('items');
+    const { isReady, folders, path, currentFolderId } = this.state;
+    const items = folders.last().get('items');
 
     return (
       <Wrapper>
