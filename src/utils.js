@@ -1,9 +1,16 @@
-export const parseItem = ({ id = 0, folderid = 0, isfolder = false, name = '', ismine = false }) => {
-  return {
+export const parseItem = ({ id = 0, folderid = 0, fileid = 0, isfolder = false, name = '', ismine = false }) => {
+  const item = {
     id: id,
-    folderId: folderid,
     isFolder: isfolder,
     name: name,
     isMine: ismine
   };
+
+  if (isfolder) {
+    item.folderId = folderid;
+  } else {
+    item.fileId = fileid;
+  }
+
+  return item;
 };

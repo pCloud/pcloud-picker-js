@@ -11,17 +11,13 @@ class App extends Component {
 
     this.state = {
       isReady: false,
-      currentFolderId: 0,
-      path: List(),
-      folders: List(
-        [
-          Map({
-            folderId: 0,
-            folderName: 'pCloud',
-            items: null
-          })
-        ]
-      )
+      path: List([0]),
+      folders: Map({
+        0: Map({
+          folderName: 'pCloud',
+          items: null
+        })
+      })
     };
 
     this._client = null;
@@ -29,14 +25,6 @@ class App extends Component {
     this._onFolderClick = this._onFolderClick.bind(this);
     this._onFileClick = this._onFileClick.bind(this);
     this._onNavigationClick = this._onNavigationClick.bind(this);
-  }
-
-  componentDidUpdate(prevProps, { folders: prevFolders }) {
-    const { folders } = this.state;
-
-    if (folders !== prevFolders) {
-      this._setItems();
-    }
   }
 
   _receiveToken(token) {
@@ -51,42 +39,37 @@ class App extends Component {
     return pcloudSdk.createClient(token);
   }
 
-  _fetchItems(client, folderId) {
-    return client.listfolder(folderId)
+  _fetchItems(folderId) {
+    return this._client.listfolder(folderId)
       .then(res => res.contents)
       .then(items => items.map(parseItem));
   }
 
   _setItems() {
-    const { folders } = this.state;
-    const folderId = folders.last().get('folderId');
-    const items = folders.last().get('items');
+    const { path, folders } = this.state;
+    const currentFolderId = path.last();
+    const currentItems = folders.getIn([currentFolderId.toString(), 'items']);
 
-    if (this._client === null) {
-      return
-    }
-
-    if (items === null) {
-      this._fetchItems(this._client, folderId)
+    if (currentItems === null) {
+      this._fetchItems(currentFolderId)
         .then(items => this.setState({
-          folders: folders.setIn([-1, 'items'], List(items))
+          folders: folders.setIn([currentFolderId.toString(), 'items'], List(items))
         }));
     }
   }
 
   _onFolderClick(folderId, name) {
-    const { folders } = this.state;
+    const { path, folders } = this.state;
 
     this.setState({
-      folders: folders.push(Map({
-        folderId: folderId,
+      folders: folders.set(folderId.toString(), Map({
         folderName: name,
         items: null
       })),
-      currentFolderId: folderId
+      path: path.push(folderId)
     });
   }
-  /*
+
   _buildPath() {
 
   }
@@ -98,19 +81,27 @@ class App extends Component {
   _onNavigationClick() {
 
   }
-  */
+
+  componentDidUpdate(prevProps, { folders: prevFolders }) {
+    const { folders } = this.state;
+
+    if (folders !== prevFolders) {
+      this._setItems();
+    }
+  }
 
   render() {
-    const { isReady, folders, path, currentFolderId } = this.state;
-    const items = folders.last().get('items');
+    const { path, folders, isReady } = this.state;
+    const currentFolderId = path.last();
+    const currentItems = folders.getIn([currentFolderId.toString(), 'items']);
 
     return (
       <Wrapper>
         {isReady ?
           <div>
-            <Navigation path={path} />
-            {items !== null ?
-              <ItemsList items={items} onFolderClick={this._onFolderClick} /> :
+            <Navigation path={path} onNameClick={this._onNavigationClick} />
+            {currentItems !== null ?
+              <ItemsList items={currentItems} onFolderClick={this._onFolderClick} /> :
               null
             }
           </div> :
