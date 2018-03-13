@@ -7,7 +7,7 @@ import { parseItem } from '../utils'
 
 class App extends Component {
   constructor() {
-    super()
+    super();
 
     this.state = {
       isReady: false,
@@ -70,16 +70,17 @@ class App extends Component {
     });
   }
 
-  _buildPath() {
-
-  }
-
   _onFileClick() {
 
   }
 
-  _onNavigationClick() {
+  _onNavigationClick(folderId) {
+    const { path } = this.state;
+    const indexOfCurrentId = path.indexOf(folderId);
 
+    this.setState({
+      path: path.slice(0, indexOfCurrentId + 1)
+    });
   }
 
   componentDidUpdate(prevProps, { folders: prevFolders }) {
@@ -90,20 +91,44 @@ class App extends Component {
     }
   }
 
-  render() {
-    const { path, folders, isReady } = this.state;
+  _renderNavigation() {
+    const { path, folders } = this.state;
+
+    return (
+      <Navigation
+        path={path}
+        folders={folders}
+        onNameClick={this._onNavigationClick}
+      />
+    );
+  }
+
+  _renderItems() {
+    const { path, folders } = this.state;
     const currentFolderId = path.last();
     const currentItems = folders.getIn([currentFolderId.toString(), 'items']);
+
+    if (currentItems === null) {
+      return null;
+    }
+
+    return (
+      <ItemsList
+        items={currentItems}
+        onFolderClick={this._onFolderClick}
+      />
+    );
+  }
+
+  render() {
+    const { isReady } = this.state;
 
     return (
       <Wrapper>
         {isReady ?
           <div>
-            <Navigation path={path} onNameClick={this._onNavigationClick} />
-            {currentItems !== null ?
-              <ItemsList items={currentItems} onFolderClick={this._onFolderClick} /> :
-              null
-            }
+            {this._renderNavigation()}
+            <Section>{this._renderItems()}</Section>
           </div> :
           <PcloudButton receiveToken={this._receiveToken} />
         }
@@ -115,6 +140,13 @@ class App extends Component {
 export default App;
 
 const Wrapper = styled.div`
-  width: 100%;
-  margin: 0 auto;
-`
+  width: 50vw;
+  margin: 10px;
+`;
+
+const Section = styled.section`
+  height: 250px;
+  border: 1px solid #E9E9E9;
+  box-sizing: border-box;
+  overflow-x: hidden;
+`;

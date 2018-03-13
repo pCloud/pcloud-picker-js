@@ -37,6 +37,5 @@ class ItemsList extends Component {
 export default ItemsList;
 
 const Table = styled.div`
-  border-bottom: 1px solid #E9E9E9;
   width: 50vw;
 `;

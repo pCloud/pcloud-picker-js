@@ -20,10 +20,8 @@ class Item extends Component {
     const { id, name } = this.props;
 
     return (
-      <Row key={id} className="row">
-        <Column>
-          <ItemName onClick={this._onClick}>{name}</ItemName>
-        </Column>
+      <Row onClick={this._onClick}>
+          <ItemName>{name}</ItemName>
       </Row>
     );
   }
@@ -33,6 +31,11 @@ export default Item;
 
 const Row = styled.div`
   display: flex;
+  height: 37px;
+  align-items: center;
+  padding-left: 10px;
+  border-bottom: 1px solid #E9E9E9;
+  box-sizing: border-box;
 `;
 
 const Column = styled.div`
@@ -44,9 +47,6 @@ const Column = styled.div`
 
 const ItemName = styled.div`
   color: #000;
-  padding-left: 0;
-  border-left: none;
-  border-bottom: none;
   font-size: 12px;
   max-width: 429px;
   overflow: hidden;
