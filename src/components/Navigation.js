@@ -45,8 +45,4 @@ export default Navigation;
 
 const Path = styled.div`
   display: flex;
-  background: #F4F4F4;
-  border: 1px solid #E9E9E9;
-  border-bottom: 0;
-  box-sizing: border-box;
 `;

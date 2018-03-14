@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import pcloudSdk from 'pcloud-sdk-js';
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { List, Map } from 'immutable';
 import { PcloudButton, Navigation, ItemsList } from '.';
 import { parseItem } from '../utils'
@@ -23,7 +23,8 @@ class App extends Component {
     this._client = null;
     this._receiveToken = this._receiveToken.bind(this);
     this._onFolderClick = this._onFolderClick.bind(this);
-    this._onFileClick = this._onFileClick.bind(this);
+    this._onFolderSelect = this._onFolderSelect.bind(this);
+    this._onFileSelect = this._onFileSelect.bind(this);
     this._onNavigationClick = this._onNavigationClick.bind(this);
   }
 
@@ -61,16 +62,23 @@ class App extends Component {
   _onFolderClick(folderId, name) {
     const { path, folders } = this.state;
 
-    this.setState({
-      folders: folders.set(folderId.toString(), Map({
-        folderName: name,
-        items: null
-      })),
-      path: path.push(folderId)
-    });
+    if (!folders.has(folderId.toString())) {
+      this.setState({
+        folders: folders.set(folderId.toString(), Map({
+          folderName: name,
+          items: null
+        }))
+      });
+    }
+
+    this.setState({ path: path.push(folderId) })
   }
 
-  _onFileClick() {
+  _onFolderSelect() {
+
+  }
+
+  _onFileSelect() {
 
   }
 
@@ -91,7 +99,7 @@ class App extends Component {
     }
   }
 
-  _renderNavigation() {
+  _renderHeader() {
     const { path, folders } = this.state;
 
     return (
@@ -108,15 +116,25 @@ class App extends Component {
     const currentFolderId = path.last();
     const currentItems = folders.getIn([currentFolderId.toString(), 'items']);
 
-    if (currentItems === null) {
-      return null;
-    }
-
     return (
-      <ItemsList
-        items={currentItems}
-        onFolderClick={this._onFolderClick}
-      />
+      <div>
+        {currentItems === null ?
+          <Loader /> :
+          <ItemsList
+            items={currentItems}
+            onFolderClick={this._onFolderClick}
+          />
+        }
+      </div>
+    );
+  }
+
+  _renderFooter() {
+    return (
+      <Footer>
+        <Button>Choose</Button>
+        <Button>Cancel</Button>
+      </Footer>
     );
   }
 
@@ -126,10 +144,11 @@ class App extends Component {
     return (
       <Wrapper>
         {isReady ?
-          <div>
-            {this._renderNavigation()}
+          <Picker>
+            <Header>{this._renderHeader()}</Header>
             <Section>{this._renderItems()}</Section>
-          </div> :
+            {this._renderFooter()}
+          </Picker> :
           <PcloudButton receiveToken={this._receiveToken} />
         }
       </Wrapper>
@@ -140,13 +159,61 @@ class App extends Component {
 export default App;
 
 const Wrapper = styled.div`
-  width: 50vw;
   margin: 10px;
 `;
 
+const Picker = styled.div`
+  width: 50vw;
+`;
+
+const Header = styled.header`
+  background: #F4F4F4;
+  border: 1px solid #E9E9E9;
+  border-bottom: 0;
+  box-sizing: border-box;
+`;
+
 const Section = styled.section`
+  position: relative;
   height: 250px;
   border: 1px solid #E9E9E9;
+  border-bottom: 0;
   box-sizing: border-box;
   overflow-x: hidden;
+`;
+
+const Pulsate = keyframes`
+  0% {transform: scale(0.1, 0.1); opacity: 0;}
+  50% {opacity: 1;}
+  100% {transform: scale(1.2, 1.2); opacity: 0;}
+`;
+
+const Loader = styled.div`
+position: absolute;
+width: 50px;
+height: 50px;
+top: 50%;
+left: 50%;
+margin: -25px 0 0 -25px;
+border: 4px solid #17bed0;
+border-radius: 30px;
+-webkit-animation: ${Pulsate} 1s ease-out;
+-moz-animation: ${Pulsate} 1s ease-out;
+-o-animation: ${Pulsate} 1s ease-out;
+animation: ${Pulsate} 1s ease-out;
+-webkit-animation-iteration-count: infinite;
+-moz-animation-iteration-count: infinite;
+-o-animation-iteration-count: infinite;
+animation-iteration-count: infinite;
+opacity: 0;
+`;
+
+const Button = styled.div`
+  margin: 10px;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  border: 1px solid #E9E9E9;
+  height: 70px;
 `;

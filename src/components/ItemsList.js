@@ -5,17 +5,17 @@ import { Item } from '.';
 class ItemsList extends Component {
   constructor() {
     super();
-    
+
     this._renderRow = this._renderRow.bind(this);
   }
 
-  _renderRow({ id, folderId, name, isFolder }) {
+  _renderRow({ id, name, isFolder }) {
     const { onFolderClick } = this.props;
 
     return (
       <Item
         key={id}
-        folderId={folderId}
+        id={id}
         name={name}
         isFolder={isFolder}
         onFolderClick={onFolderClick}
@@ -23,12 +23,21 @@ class ItemsList extends Component {
     );
   }
 
+  _renderItems() {
+    const { items } = this.props;
+
+    return items.map(this._renderRow)
+  }
+
   render() {
     const { items } = this.props;
 
     return (
       <Table>
-        {items.map(this._renderRow)}
+        {items.size === 0 ?
+          <EmptyFolder>This folder is emptry.</EmptyFolder> :
+          this._renderItems()
+        }
       </Table>
     );
   }
@@ -37,5 +46,10 @@ class ItemsList extends Component {
 export default ItemsList;
 
 const Table = styled.div`
-  width: 50vw;
+  width: 100%;
+`;
+
+const EmptyFolder = styled.div`
+  width: 100%;
+  height: 100%;
 `;
