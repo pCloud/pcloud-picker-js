@@ -9,15 +9,15 @@ class Item extends Component {
   }
 
   _onClick() {
-    const { folderId, name, isFolder, onFolderClick } = this.props;
+    const { id, name, isFolder, onFolderClick } = this.props;
 
     if (isFolder) {
-      onFolderClick(folderId, name);
+      onFolderClick(id, name);
     }
   }
 
   render() {
-    const { id, name } = this.props;
+    const { name } = this.props;
 
     return (
       <Row onClick={this._onClick}>
