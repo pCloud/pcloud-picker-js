@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import pcloudSdk from 'pcloud-sdk-js';
 import styled, { keyframes } from "styled-components";
 import { List, Map } from 'immutable';
-import { PcloudButton, Navigation, ItemsList } from '.';
+import { CLIENT_ID, REDIRECT_URI } from '../config/constants';
+import { Button, Navigation, ItemsList } from '.';
 import { parseItem } from '../utils'
 
-class App extends Component {
+class Picker extends Component {
   constructor() {
     super();
 
@@ -22,10 +23,19 @@ class App extends Component {
 
     this._client = null;
     this._receiveToken = this._receiveToken.bind(this);
+    this._getToken = this._getToken.bind(this);
     this._onFolderClick = this._onFolderClick.bind(this);
     this._onFolderSelect = this._onFolderSelect.bind(this);
     this._onFileSelect = this._onFileSelect.bind(this);
     this._onNavigationClick = this._onNavigationClick.bind(this);
+  }
+
+  _getToken() {
+    pcloudSdk.oauth.initOauthToken({
+      client_id: CLIENT_ID,
+      redirect_uri: REDIRECT_URI,
+      receiveToken: this._receiveToken
+    });
   }
 
   _receiveToken(token) {
@@ -132,8 +142,8 @@ class App extends Component {
   _renderFooter() {
     return (
       <Footer>
-        <Button>Choose</Button>
-        <Button>Cancel</Button>
+        <Button text='choose' />
+        <Button text='cancel' />
       </Footer>
     );
   }
@@ -144,25 +154,25 @@ class App extends Component {
     return (
       <Wrapper>
         {isReady ?
-          <Picker>
+          <PickerWapper>
             <Header>{this._renderHeader()}</Header>
             <Section>{this._renderItems()}</Section>
             {this._renderFooter()}
-          </Picker> :
-          <PcloudButton receiveToken={this._receiveToken} />
+          </PickerWapper> :
+          <Button text='pCloud' onButtonClick={this._getToken} />
         }
       </Wrapper>
     );
   }
 }
 
-export default App;
+export default Picker;
 
 const Wrapper = styled.div`
   margin: 10px;
 `;
 
-const Picker = styled.div`
+const PickerWapper = styled.div`
   width: 50vw;
 `;
 
@@ -197,23 +207,15 @@ left: 50%;
 margin: -25px 0 0 -25px;
 border: 4px solid #17bed0;
 border-radius: 30px;
--webkit-animation: ${Pulsate} 1s ease-out;
--moz-animation: ${Pulsate} 1s ease-out;
--o-animation: ${Pulsate} 1s ease-out;
 animation: ${Pulsate} 1s ease-out;
--webkit-animation-iteration-count: infinite;
--moz-animation-iteration-count: infinite;
--o-animation-iteration-count: infinite;
 animation-iteration-count: infinite;
 opacity: 0;
 `;
 
-const Button = styled.div`
-  margin: 10px;
-`;
-
 const Footer = styled.footer`
   display: flex;
+  justify-content: flex-end;
+  align-items: center;
   border: 1px solid #E9E9E9;
   height: 70px;
 `;

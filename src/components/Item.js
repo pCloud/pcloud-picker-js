@@ -17,11 +17,12 @@ class Item extends Component {
   }
 
   render() {
-    const { name } = this.props;
+    const { name, isFolder } = this.props;
 
     return (
       <Row onClick={this._onClick}>
           <ItemName>{name}</ItemName>
+          {isFolder ? <SelectFolder>Select</SelectFolder>: null}
       </Row>
     );
   }
@@ -29,25 +30,28 @@ class Item extends Component {
 
 export default Item;
 
-const Row = styled.div`
-  display: flex;
-  height: 37px;
-  align-items: center;
-  padding-left: 10px;
-  border-bottom: 1px solid #E9E9E9;
-  box-sizing: border-box;
+const SelectFolder = styled.div`
+  display: none;
+  cursor: pointer;
+  font-weight: bold;
 `;
 
-const Column = styled.div`
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
   height: 37px;
-  width: 100%;
-  padding-left: 10px;
-  border: 1px solid #E9E9E9;
+  align-items: center;
+  padding: 0 10px;
+  border-bottom: 1px solid #E9E9E9;
+  font-size: 12px;
+  box-sizing: border-box;
+  &:hover ${SelectFolder} {
+    display: block;
+  }
 `;
 
 const ItemName = styled.div`
   color: #000;
-  font-size: 12px;
   max-width: 429px;
   overflow: hidden;
   font-family: Arial, Helvetica;
