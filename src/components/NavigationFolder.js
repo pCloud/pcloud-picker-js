@@ -16,11 +16,11 @@ class NavigationFolder extends Component {
   }
 
   render() {
-    const { id, name, shouldRenderIcon } = this.props;
+    const { name, shouldRenderIcon } = this.props;
 
     return (
       <Wrapper>
-        {shouldRenderIcon ? <img src={ArrowIcon} /> : null}
+        {shouldRenderIcon ? <img src={ArrowIcon} alt="arrow-icon" /> : null}
         <FolderName onClick={this._onClick}>{name}</FolderName>
       </Wrapper>
     );

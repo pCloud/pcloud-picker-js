@@ -10,7 +10,7 @@ class ItemsList extends Component {
   }
 
   _renderRow({ id, iconId, name, isFolder }) {
-    const { onFolderClick } = this.props;
+    const { onFolderDoubleClick } = this.props;
 
     return (
       <Item
@@ -19,7 +19,7 @@ class ItemsList extends Component {
         iconId={iconId}
         name={name}
         isFolder={isFolder}
-        onFolderClick={onFolderClick}
+        onFolderDoubleClick={onFolderDoubleClick}
       />
     );
   }

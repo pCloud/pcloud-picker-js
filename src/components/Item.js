@@ -6,23 +6,23 @@ class Item extends Component {
   constructor() {
     super();
 
-    this._onClick = this._onClick.bind(this);
+    this._onDoubleClick = this._onDoubleClick.bind(this);
   }
 
-  _onClick() {
-    const { id, name, isFolder, onFolderClick } = this.props;
+  _onDoubleClick() {
+    const { id, name, isFolder, onFolderDoubleClick } = this.props;
 
     if (isFolder) {
-      onFolderClick(id, name);
+      onFolderDoubleClick(id, name);
     }
   }
 
   render() {
-    const { name, isFolder, iconId } = this.props;
+    const { name, iconId } = this.props;
 
     return (
-      <Row onClick={this._onClick}>
-        <img src={getIcon(iconId)} />
+      <Row onDoubleClick={this._onDoubleClick}>
+        <img src={getIcon(iconId)} alt="icon" />
         <ItemName>{name}</ItemName>
       </Row>
     );

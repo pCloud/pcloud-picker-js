@@ -24,7 +24,7 @@ class Picker extends Component {
     this._client = null;
     this._receiveToken = this._receiveToken.bind(this);
     this._getToken = this._getToken.bind(this);
-    this._onFolderClick = this._onFolderClick.bind(this);
+    this._onFolderDoubleClick = this._onFolderDoubleClick.bind(this);
     this._onFolderSelect = this._onFolderSelect.bind(this);
     this._onFileSelect = this._onFileSelect.bind(this);
     this._onNavigationClick = this._onNavigationClick.bind(this);
@@ -69,7 +69,7 @@ class Picker extends Component {
     }
   }
 
-  _onFolderClick(folderId, name) {
+  _onFolderDoubleClick(folderId, name) {
     const { path, folders } = this.state;
 
     if (!folders.has(folderId.toString())) {
@@ -128,7 +128,7 @@ class Picker extends Component {
           <Loader /> :
           <ItemsList
             items={currentItems}
-            onFolderClick={this._onFolderClick}
+            onFolderDoubleClick={this._onFolderDoubleClick}
           />
         }
       </div>
@@ -171,6 +171,7 @@ const Wrapper = styled.div`
 
 const PickerWapper = styled.div`
   width: 30vw;
+  user-select: none;
 `;
 
 const Header = styled.header`

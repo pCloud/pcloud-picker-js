@@ -27,7 +27,6 @@ const icons = {
   1000: require("./img/icons/24/1000.png"),
   1001: require("./img/icons/24/1001.png"),
   1002: require("./img/icons/24/1002.png"),
-  1002: require("./img/icons/24/1002.png"),
   1006: require("./img/icons/24/1006.png"),
 
   deleted: require("./img/icons/24/deleted.png"),
