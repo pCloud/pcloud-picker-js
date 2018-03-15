@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import styled from "styled-components";
+import styled from 'styled-components';
+import { getIcon } from '../utils';
 
 class Item extends Component {
   constructor() {
@@ -17,12 +18,12 @@ class Item extends Component {
   }
 
   render() {
-    const { name, isFolder } = this.props;
+    const { name, isFolder, iconId } = this.props;
 
     return (
       <Row onClick={this._onClick}>
-          <ItemName>{name}</ItemName>
-          {isFolder ? <SelectFolder>Select</SelectFolder>: null}
+        <img src={getIcon(iconId)} />
+        <ItemName>{name}</ItemName>
       </Row>
     );
   }
@@ -30,31 +31,22 @@ class Item extends Component {
 
 export default Item;
 
-const SelectFolder = styled.div`
-  display: none;
-  cursor: pointer;
-  font-weight: bold;
-`;
-
 const Row = styled.div`
   display: flex;
-  justify-content: space-between;
-  height: 37px;
   align-items: center;
   padding: 0 10px;
-  border-bottom: 1px solid #E9E9E9;
-  font-size: 12px;
   box-sizing: border-box;
-  &:hover ${SelectFolder} {
-    display: block;
+  &:hover {
+    background-color: #f8f8f8;
   }
 `;
 
 const ItemName = styled.div`
   color: #000;
+  margin-left: 10px;
   max-width: 429px;
   overflow: hidden;
-  font-family: Arial, Helvetica;
   text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
   text-overflow: ellipsis;
+  user-select: none;
 `;

@@ -18,7 +18,7 @@ class Navigation extends Component {
   _renderFolder(folderId, index) {
     const { onNameClick } = this.props;
     const folderName = this._getFolderName(folderId);
-    const shouldRenderSlash = index > 0;
+    const shouldRenderIcon = index > 0;
 
     return (
       <NavigationFolder
@@ -26,7 +26,7 @@ class Navigation extends Component {
         id={folderId}
         name={folderName}
         onNameClick={onNameClick}
-        shouldRenderSlash={shouldRenderSlash}
+        shouldRenderIcon={shouldRenderIcon}
       />
     );
   }
@@ -45,4 +45,5 @@ export default Navigation;
 
 const Path = styled.div`
   display: flex;
+  padding-left: 10px;
 `;

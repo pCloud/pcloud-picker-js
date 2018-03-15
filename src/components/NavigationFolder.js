@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from "styled-components";
+import ArrowIcon from '../img/arrow.png'
 
 class NavigationFolder extends Component {
   constructor() {
@@ -15,11 +16,11 @@ class NavigationFolder extends Component {
   }
 
   render() {
-    const { id, name, shouldRenderSlash } = this.props;
+    const { id, name, shouldRenderIcon } = this.props;
 
     return (
       <Wrapper>
-        {shouldRenderSlash ? <span>/ </span> : null}
+        {shouldRenderIcon ? <img src={ArrowIcon} /> : null}
         <FolderName onClick={this._onClick}>{name}</FolderName>
       </Wrapper>
     );
@@ -36,8 +37,6 @@ const Wrapper = styled.div`
 `;
 
 const FolderName = styled.div`
-  padding: 5px;
   cursor: pointer;
-  font-size: 13px;
   font-weight: bold;
 `;

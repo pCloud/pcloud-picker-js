@@ -9,13 +9,14 @@ class ItemsList extends Component {
     this._renderRow = this._renderRow.bind(this);
   }
 
-  _renderRow({ id, name, isFolder }) {
+  _renderRow({ id, iconId, name, isFolder }) {
     const { onFolderClick } = this.props;
 
     return (
       <Item
         key={id}
         id={id}
+        iconId={iconId}
         name={name}
         isFolder={isFolder}
         onFolderClick={onFolderClick}
@@ -26,7 +27,7 @@ class ItemsList extends Component {
   _renderItems() {
     const { items } = this.props;
 
-    return items.map(this._renderRow)
+    return items.map(this._renderRow);
   }
 
   render() {

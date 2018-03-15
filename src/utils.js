@@ -1,8 +1,11 @@
-export const parseItem = ({ folderid = 0, fileid = 0, isfolder = false, name = '', ismine = false }) => {
+import icons from './icons';
+
+export const parseItem = ({ folderid = 0, fileid = 0, isfolder = false, name = '', ismine = false, icon = 20 }) => {
   const item = {
     isFolder: isfolder,
     name: name,
-    isMine: ismine
+    isMine: ismine,
+    iconId: icon
   };
 
   if (isfolder) {
@@ -13,3 +16,5 @@ export const parseItem = ({ folderid = 0, fileid = 0, isfolder = false, name = '
 
   return item;
 };
+
+export const getIcon = iconId => icons[iconId];

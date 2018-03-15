@@ -51,7 +51,7 @@ class Picker extends Component {
   }
 
   _fetchItems(folderId) {
-    return this._client.listfolder(folderId)
+    return this._client.listfolder(folderId, { iconformat: 'id' })
       .then(res => res.contents)
       .then(items => items.map(parseItem));
   }
@@ -81,16 +81,12 @@ class Picker extends Component {
       });
     }
 
-    this.setState({ path: path.push(folderId) })
+    this.setState({ path: path.push(folderId) });
   }
 
-  _onFolderSelect() {
+  _onFolderSelect() { }
 
-  }
-
-  _onFileSelect() {
-
-  }
+  _onFileSelect() { }
 
   _onNavigationClick(folderId) {
     const { path } = this.state;
@@ -142,8 +138,8 @@ class Picker extends Component {
   _renderFooter() {
     return (
       <Footer>
-        <Button text='choose' />
-        <Button text='cancel' />
+        <Button text="cancel" />
+        <Button text="choose" />
       </Footer>
     );
   }
@@ -170,15 +166,15 @@ export default Picker;
 
 const Wrapper = styled.div`
   margin: 10px;
+  font: 11px/34px Arial, Helvetica;
 `;
 
 const PickerWapper = styled.div`
-  width: 50vw;
+  width: 30vw;
 `;
 
 const Header = styled.header`
-  background: #F4F4F4;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #e9e9e9;
   border-bottom: 0;
   box-sizing: border-box;
 `;
@@ -186,7 +182,7 @@ const Header = styled.header`
 const Section = styled.section`
   position: relative;
   height: 250px;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #e9e9e9;
   border-bottom: 0;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -205,7 +201,7 @@ height: 50px;
 top: 50%;
 left: 50%;
 margin: -25px 0 0 -25px;
-border: 4px solid #17bed0;
+border: 4px solid #20bed6;
 border-radius: 30px;
 animation: ${Pulsate} 1s ease-out;
 animation-iteration-count: infinite;

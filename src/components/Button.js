@@ -16,14 +16,14 @@ export default Button;
 
 const DefaultButton = styled.div`
   cursor: pointer;
-  margin-right: 15px;
+  margin: 10px;
   height: 28px;
   width: 50px;
   text-align: center;
   line-height: 28px;
-  background: #17bed0;
+  background: #20bed6;
   color: #fff;
-  font-size: 14px;
   padding: 0 20px;
   border-radius: 3px;
+  user-select: none;
 `;
