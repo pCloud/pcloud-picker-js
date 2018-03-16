@@ -18,3 +18,13 @@ export const parseItem = ({ folderid = 0, fileid = 0, isfolder = false, name = '
 };
 
 export const getIcon = iconId => icons[iconId];
+
+export const debounce = fn => {
+  let inDebounce;
+
+  return () => {
+    clearTimeout(inDebounce)
+
+    inDebounce = setTimeout(() => fn(), 250)
+  }
+}

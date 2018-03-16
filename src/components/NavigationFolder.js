@@ -39,4 +39,5 @@ const Wrapper = styled.div`
 const FolderName = styled.div`
   cursor: pointer;
   font-weight: bold;
+  color: #595959;
 `;

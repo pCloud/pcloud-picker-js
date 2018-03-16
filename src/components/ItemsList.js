@@ -50,9 +50,14 @@ export default ItemsList;
 
 const Table = styled.div`
   width: 100%;
+  font-family: "Arial Narrow", Arial;
 `;
 
 const EmptyFolder = styled.div`
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 13px;
+  color: #ababab;
 `;

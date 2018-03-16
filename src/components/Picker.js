@@ -82,12 +82,12 @@ class Picker extends Component {
           items: null
         })),
         path: path.push(folderId),
-        selectedItemId: 0
+        selectedItemId: folderId
       });
     } else {
       this.setState({
         path: path.push(folderId),
-        selectedItemId: 0
+        selectedItemId: folderId
       });
     }
   }
@@ -117,7 +117,7 @@ class Picker extends Component {
 
     this.setState({
       path: path.slice(0, indexOfCurrentId + 1),
-      selectedItemId: 0
+      selectedItemId: folderId
     });
   }
 
@@ -166,15 +166,8 @@ class Picker extends Component {
 
     return (
       <Footer>
-        <Button
-          text="cancel"
-          onButtonClick={this._onCloseButtonClick}
-        />
-        <Button
-          text="choose"
-          isDisabled={selectedItemId === 0 ? true : false}
-          onButtonClick={this._onChooseButtonClick}
-        />
+        <CancelButton onClick={this._onCloseButtonClick}>Cancel</CancelButton>
+        <DefaultButton onClick={this._onChooseButtonClick}>Choose</DefaultButton>
       </Footer>
     );
   }
@@ -190,10 +183,7 @@ class Picker extends Component {
             <Section>{this._renderItems()}</Section>
             {this._renderFooter()}
           </PickerWapper> :
-          <Button
-            text="pCloud"
-            onButtonClick={this._getToken}
-          />
+          <DefaultButton onClick={this._getToken}>pCloud</DefaultButton>
         }
       </Wrapper>
     );
@@ -205,10 +195,12 @@ export default Picker;
 const Wrapper = styled.div`
   margin: 10px;
   font: 11px/34px Arial, Helvetica;
+  color: #999;
 `;
 
 const PickerWapper = styled.div`
   width: 30vw;
+  min-width: 500px;
   user-select: none;
 `;
 
@@ -253,4 +245,25 @@ const Footer = styled.footer`
   align-items: center;
   border: 1px solid #E9E9E9;
   height: 70px;
+`;
+
+const DefaultButton = styled.div`
+  cursor: pointer;
+  background: #20bed6;
+  color: #fff;
+  margin: 10px;
+  padding: 0 20px;
+  height: 28px;
+  width: 50px;
+  line-height: 28px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 3px;
+  user-select: none;
+`;
+
+const CancelButton = DefaultButton.extend`
+  background: #FFFFFF;
+  border: 1px solid #E9E9E9;
+  color: #999;
 `;

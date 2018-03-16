@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { getIcon } from '../utils';
+import { getIcon, debounce } from '../utils';
 
 class Item extends Component {
   constructor() {
@@ -28,7 +28,7 @@ class Item extends Component {
     return (
       <Row
         isSelected={isSelected}
-        onClick={this._onClick}
+        onClick={debounce(this._onClick)}
         onDoubleClick={this._onDoubleClick}
       >
         <img src={getIcon(iconId)} alt="icon" />
@@ -44,19 +44,20 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px;
-  box-sizing: border-box;
   background: ${props => props.isSelected ? '#f8f8f8' : '#fff'};
   &:hover {
     background-color: #f8f8f8;
   }
+  box-sizing: border-box;
 `;
 
 const ItemName = styled.div`
-  color: #000;
   margin-left: 10px;
-  max-width: 429px;
+  max-width: 100%;
   overflow: hidden;
-  text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
+  white-space: nowrap; 
   text-overflow: ellipsis;
+  word-break: break-all;
+  text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
   user-select: none;
 `;
