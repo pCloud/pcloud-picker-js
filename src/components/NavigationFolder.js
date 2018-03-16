@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from "styled-components";
+import styled from 'styled-components';
 import ArrowIcon from '../img/arrow.png'
 
 class NavigationFolder extends Component {

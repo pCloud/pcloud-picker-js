@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from "styled-components";
+import styled from 'styled-components';
 import { NavigationFolder } from '.';
 
 class Navigation extends Component {

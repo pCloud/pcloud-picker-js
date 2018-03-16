@@ -6,22 +6,31 @@ class Item extends Component {
   constructor() {
     super();
 
+    this._onClick = this._onClick.bind(this);
     this._onDoubleClick = this._onDoubleClick.bind(this);
   }
 
-  _onDoubleClick() {
-    const { id, name, isFolder, onFolderDoubleClick } = this.props;
+  _onClick() {
+    const { id, onItemClick } = this.props;
 
-    if (isFolder) {
-      onFolderDoubleClick(id, name);
-    }
+    onItemClick(id)
+  }
+
+  _onDoubleClick() {
+    const { id, name, isFolder, onItemDoubleClick } = this.props;
+
+    onItemDoubleClick(isFolder, id, name);
   }
 
   render() {
-    const { name, iconId } = this.props;
+    const { name, iconId, isSelected } = this.props;
 
     return (
-      <Row onDoubleClick={this._onDoubleClick}>
+      <Row
+        isSelected={isSelected}
+        onClick={this._onClick}
+        onDoubleClick={this._onDoubleClick}
+      >
         <img src={getIcon(iconId)} alt="icon" />
         <ItemName>{name}</ItemName>
       </Row>
@@ -36,6 +45,7 @@ const Row = styled.div`
   align-items: center;
   padding: 0 10px;
   box-sizing: border-box;
+  background: ${props => props.isSelected ? '#f8f8f8' : '#fff'};
   &:hover {
     background-color: #f8f8f8;
   }

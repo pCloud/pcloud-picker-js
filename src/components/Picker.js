@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import pcloudSdk from 'pcloud-sdk-js';
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
 import { List, Map } from 'immutable';
 import { CLIENT_ID, REDIRECT_URI } from '../config/constants';
 import { Button, Navigation, ItemsList } from '.';
@@ -18,15 +18,18 @@ class Picker extends Component {
           folderName: 'pCloud',
           items: null
         })
-      })
+      }),
+      selectedItemId: 0
     };
 
     this._client = null;
     this._receiveToken = this._receiveToken.bind(this);
     this._getToken = this._getToken.bind(this);
     this._onFolderDoubleClick = this._onFolderDoubleClick.bind(this);
-    this._onFolderSelect = this._onFolderSelect.bind(this);
-    this._onFileSelect = this._onFileSelect.bind(this);
+    this._onItemClick = this._onItemClick.bind(this);
+    this._onItemDoubleClick = this._onItemDoubleClick.bind(this);
+    this._onChooseButtonClick = this._onChooseButtonClick.bind(this);
+    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onNavigationClick = this._onNavigationClick.bind(this);
   }
 
@@ -77,23 +80,44 @@ class Picker extends Component {
         folders: folders.set(folderId.toString(), Map({
           folderName: name,
           items: null
-        }))
+        })),
+        path: path.push(folderId),
+        selectedItemId: 0
+      });
+    } else {
+      this.setState({
+        path: path.push(folderId),
+        selectedItemId: 0
       });
     }
-
-    this.setState({ path: path.push(folderId) });
   }
 
-  _onFolderSelect() { }
+  _onItemClick(id) {
+    this.setState({ selectedItemId: id })
+  }
 
-  _onFileSelect() { }
+  _onItemDoubleClick(isFolder, id, name) {
+
+    if (isFolder) {
+      this._onFolderDoubleClick(id, name);
+    } else {
+      this._onChooseButtonClick(id);
+    }
+  }
+
+  _onCloseButtonClick() { }
+
+  _onChooseButtonClick(id, isFolder) {
+
+  }
 
   _onNavigationClick(folderId) {
     const { path } = this.state;
     const indexOfCurrentId = path.indexOf(folderId);
 
     this.setState({
-      path: path.slice(0, indexOfCurrentId + 1)
+      path: path.slice(0, indexOfCurrentId + 1),
+      selectedItemId: 0
     });
   }
 
@@ -118,7 +142,7 @@ class Picker extends Component {
   }
 
   _renderItems() {
-    const { path, folders } = this.state;
+    const { path, folders, selectedItemId } = this.state;
     const currentFolderId = path.last();
     const currentItems = folders.getIn([currentFolderId.toString(), 'items']);
 
@@ -127,8 +151,10 @@ class Picker extends Component {
         {currentItems === null ?
           <Loader /> :
           <ItemsList
+            selectedItemId={selectedItemId}
             items={currentItems}
-            onFolderDoubleClick={this._onFolderDoubleClick}
+            onItemClick={this._onItemClick}
+            onItemDoubleClick={this._onItemDoubleClick}
           />
         }
       </div>
@@ -136,10 +162,19 @@ class Picker extends Component {
   }
 
   _renderFooter() {
+    const { selectedItemId } = this.state;
+
     return (
       <Footer>
-        <Button text="cancel" />
-        <Button text="choose" />
+        <Button
+          text="cancel"
+          onButtonClick={this._onCloseButtonClick}
+        />
+        <Button
+          text="choose"
+          isDisabled={selectedItemId === 0 ? true : false}
+          onButtonClick={this._onChooseButtonClick}
+        />
       </Footer>
     );
   }
@@ -155,7 +190,10 @@ class Picker extends Component {
             <Section>{this._renderItems()}</Section>
             {this._renderFooter()}
           </PickerWapper> :
-          <Button text='pCloud' onButtonClick={this._getToken} />
+          <Button
+            text="pCloud"
+            onButtonClick={this._getToken}
+          />
         }
       </Wrapper>
     );

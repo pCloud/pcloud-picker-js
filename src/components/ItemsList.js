@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from "styled-components";
+import styled from 'styled-components';
 import { Item } from '.';
 
 class ItemsList extends Component {
@@ -10,7 +10,7 @@ class ItemsList extends Component {
   }
 
   _renderRow({ id, iconId, name, isFolder }) {
-    const { onFolderDoubleClick } = this.props;
+    const { selectedItemId, onItemClick, onItemDoubleClick } = this.props;
 
     return (
       <Item
@@ -19,7 +19,9 @@ class ItemsList extends Component {
         iconId={iconId}
         name={name}
         isFolder={isFolder}
-        onFolderDoubleClick={onFolderDoubleClick}
+        isSelected={selectedItemId === id ? true : false}
+        onItemClick={onItemClick}
+        onItemDoubleClick={onItemDoubleClick}
       />
     );
   }
