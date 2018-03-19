@@ -1,23 +1,37 @@
-import React, { Component } from 'react';
+// @flow
+
+import * as React from 'react';
 import styled from 'styled-components';
+import { List } from 'immutable';
 import { NavigationFolder } from '.';
 
-class Navigation extends Component {
+type folder = {
+  folderName: string,
+  items: null | List<any>
+};
+
+type NavigationProps = {
+  path: List<number>,
+  folders: Map<string, folder>,
+  onNameClick: () => void
+};
+
+class Navigation extends React.Component<NavigationProps, {}> {
   constructor() {
     super();
 
-    this._renderFolder = this._renderFolder.bind(this);
+    (this: any)._renderFolder = this._renderFolder.bind(this);
   }
 
-  _getFolderName(folderId) {
+  _getFolderName(folderId: string) {
     const { folders } = this.props;
 
-    return folders.getIn([folderId.toString(), 'folderName']);
+    return folders.getIn([folderId, 'folderName']);
   }
 
-  _renderFolder(folderId, index) {
+  _renderFolder(folderId: number, index: number) {
     const { onNameClick } = this.props;
-    const folderName = this._getFolderName(folderId);
+    const folderName = this._getFolderName(String(folderId));
     const shouldRenderIcon = index > 0;
 
     return (

@@ -1,16 +1,27 @@
-import React, { Component } from 'react';
+// @flow
+
+import * as React from 'react';
+import { List } from 'immutable';
 import styled from 'styled-components';
 import { Item } from '.';
 
-class ItemsList extends Component {
+type ItemsListProps = {
+  selectedItemId: number,
+  items: List<any>,
+  onItemClick: () => void,
+  onItemDoubleClick: () => void
+};
+
+class ItemsList extends React.Component<ItemsListProps, {}> {
   constructor() {
     super();
 
-    this._renderRow = this._renderRow.bind(this);
+    (this: any)._renderRow = this._renderRow.bind(this);
   }
 
-  _renderRow({ id, iconId, name, isFolder }) {
+  _renderRow(item: { id: string, iconId: number, name: string, isFolder: boolean }) {
     const { selectedItemId, onItemClick, onItemDoubleClick } = this.props;
+    const { id, iconId, name, isFolder } = item;
 
     return (
       <Item

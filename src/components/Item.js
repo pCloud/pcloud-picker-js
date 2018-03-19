@@ -1,13 +1,26 @@
-import React, { Component } from 'react';
+// @flow
+
+import * as React from 'react';
 import styled from 'styled-components';
 import { getIcon, debounce } from '../utils';
 
-class Item extends Component {
+type ItemProps = {
+  key: number,
+  id: string,
+  iconId: number,
+  name: string,
+  isFolder: boolean,
+  isSelected: boolean,
+  onItemClick: (id: string) => void,
+  onItemDoubleClick: (isFolder: boolean, id: string, name: string) => void
+};
+
+class Item extends React.Component<ItemProps, {}> {
   constructor() {
     super();
 
-    this._onClick = this._onClick.bind(this);
-    this._onDoubleClick = this._onDoubleClick.bind(this);
+    (this: any)._onClick = this._onClick.bind(this);
+    (this: any)._onDoubleClick = this._onDoubleClick.bind(this);
   }
 
   _onClick() {

@@ -1,12 +1,21 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import ArrowIcon from '../img/arrow.png'
+// @flow
 
-class NavigationFolder extends Component {
+import * as React from 'react';
+import styled from 'styled-components';
+import ArrowIcon from '../img/arrow.png';
+
+type NavigationFolderProps = {
+  id: string,
+  name: string,
+  onNameClick: (string) => void,
+  shouldRenderIcon: boolean
+};
+
+class NavigationFolder extends React.Component<NavigationFolderProps, {}> {
   constructor() {
     super();
 
-    this._onClick = this._onClick.bind(this);
+    (this: any)._onClick = this._onClick.bind(this);
   }
 
   _onClick() {

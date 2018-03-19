@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "immutable": "^3.8.2",
+    "immutable": "^4.0.0-rc.9",
     "pcloud-sdk-js": "^1.4.0",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-new-window": "0.0.4",
     "react-scripts": "1.1.1",
     "styled-components": "^3.2.3"
   },
@@ -14,6 +16,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "flow": "flow"
+  },
+  "devDependencies": {
+    "babel-preset-flow": "^6.23.0",
+    "flow-bin": "^0.68.0"
   }
 }
