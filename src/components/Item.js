@@ -1,11 +1,10 @@
 // @flow
 
-import * as React from 'react';
-import styled from 'styled-components';
-import { getIcon, debounce } from '../utils';
+import * as React from "react";
+import styled from "styled-components";
+import { getIcon } from "../utils";
 
 type ItemProps = {
-  key: number,
   id: string,
   iconId: number,
   name: string,
@@ -16,6 +15,16 @@ type ItemProps = {
 };
 
 class Item extends React.Component<ItemProps, {}> {
+  static defaultProps = {
+    id: "0",
+    iconId: 0,
+    name: "",
+    isFolder: false,
+    isSelected: false,
+    onItemClick: () => {},
+    onItemDoubleClick: () => {}
+  };
+
   constructor() {
     super();
 
@@ -26,7 +35,7 @@ class Item extends React.Component<ItemProps, {}> {
   _onClick() {
     const { id, onItemClick } = this.props;
 
-    onItemClick(id)
+    onItemClick(id);
   }
 
   _onDoubleClick() {
@@ -41,7 +50,7 @@ class Item extends React.Component<ItemProps, {}> {
     return (
       <Row
         isSelected={isSelected}
-        onClick={debounce(this._onClick)}
+        onClick={this._onClick}
         onDoubleClick={this._onDoubleClick}
       >
         <img src={getIcon(iconId)} alt="icon" />
@@ -57,9 +66,9 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px;
-  background: ${props => props.isSelected ? '#f8f8f8' : '#fff'};
+  background: ${props => (props.isSelected ? "#eaeaea" : "#fff")};
   &:hover {
-    background-color: #f8f8f8;
+    background-color: ${props => (props.isSelected ? "#eaeaea" : "#f8f8f8")};
   }
   box-sizing: border-box;
 `;
@@ -68,9 +77,9 @@ const ItemName = styled.div`
   margin-left: 10px;
   max-width: 100%;
   overflow: hidden;
-  white-space: nowrap; 
+  white-space: nowrap;
   text-overflow: ellipsis;
   word-break: break-all;
-  text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
   user-select: none;
 `;

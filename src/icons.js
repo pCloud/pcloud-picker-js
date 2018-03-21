@@ -32,6 +32,6 @@ const icons = {
   deleted: require("./img/icons/24/deleted.png"),
   "folder-linux": require("./img/icons/24/folder-linux.png"),
   "folder-mac": require("./img/icons/24/folder-mac.png")
-}
+};
 
 export default icons;

@@ -1,16 +1,21 @@
 // @flow
 
-import * as React from 'react';
-import NewWindow from 'react-new-window'
-import pcloudSdk from 'pcloud-sdk-js';
-import styled, { keyframes } from 'styled-components';
-import { List, Map } from 'immutable';
-import { CLIENT_ID, REDIRECT_URI } from '../config/constants';
-import { Navigation, ItemsList } from '.';
-import { parseItem } from '../utils';
+import * as React from "react";
+import pcloudSdk from "pcloud-sdk-js";
+import styled, { keyframes } from "styled-components";
+import { List, Map } from "immutable";
+import { Navigation, ItemsList } from ".";
+import { parseItem } from "../utils";
+import {
+  ROOT_FOLDER_ID,
+  ROOT_FOLDER_NAME,
+  CLIENT_ID,
+  REDIRECT_URI
+} from "../config/constants";
 
 type PickerProps = {
-
+  onSelect: () => void,
+  onClose: () => void
 };
 
 type folder = {
@@ -20,9 +25,9 @@ type folder = {
 
 type PickerState = {
   isReady: boolean,
-  path: List<number>,
+  path: List<string>,
   folders: Map<string, folder>,
-  selectedItemId: number
+  selectedItemId: string
 };
 
 class Picker extends React.Component<PickerProps, PickerState> {
@@ -31,14 +36,14 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
     this.state = {
       isReady: false,
-      path: List([0]),
+      path: List([ROOT_FOLDER_ID]),
       folders: Map({
-        '0': {
-          folderName: 'pCloud',
+        [ROOT_FOLDER_ID]: {
+          folderName: ROOT_FOLDER_NAME,
           items: null
         }
       }),
-      selectedItemId: 0
+      selectedItemId: ROOT_FOLDER_ID
     };
 
     (this: any)._client = null;
@@ -73,30 +78,38 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   _fetchItems(folderId: number) {
-    return (this: any)._client.listfolder(folderId, { iconformat: 'id' })
+    return (this: any)._client
+      .listfolder(folderId, { iconformat: "id" })
       .then(res => res.contents)
       .then(items => items.map(parseItem));
   }
 
+  _getCurrentFolderId(): string {
+    const { path } = this.state;
+
+    return path.last() || ROOT_FOLDER_ID;
+  }
+
   _setItems() {
-    const { path, folders } = this.state;
-    const currentFolderId = path.last();
-    const currentItems = folders.getIn([String(currentFolderId), 'items']);
+    const { folders } = this.state;
+    const currentFolderId = this._getCurrentFolderId();
+    const currentItems = folders.getIn([currentFolderId, "items"], null);
 
     if (currentItems === null) {
-      this._fetchItems(Number(currentFolderId))
-        .then(items => this.setState({
-          folders: folders.setIn([String(currentFolderId), 'items'], List(items))
-        }));
+      this._fetchItems(+currentFolderId).then(items =>
+        this.setState({
+          folders: folders.setIn([currentFolderId, "items"], List(items))
+        })
+      );
     }
   }
 
-  _onFolderDoubleClick(folderId: number, name: string) {
+  _onFolderDoubleClick(folderId: string, name: string) {
     const { path, folders } = this.state;
 
-    if (!folders.has(folderId.toString())) {
+    if (!folders.has(folderId)) {
       this.setState({
-        folders: folders.set(folderId.toString(), {
+        folders: folders.set(folderId, {
           folderName: name,
           items: null
         }),
@@ -111,12 +124,15 @@ class Picker extends React.Component<PickerProps, PickerState> {
     }
   }
 
-  _onItemClick(id: number) {
-    this.setState({ selectedItemId: id })
+  _onItemClick(id: string) {
+    const { selectedItemId } = this.state;
+
+    if (id !== selectedItemId) {
+      this.setState({ selectedItemId: id });
+    }
   }
 
-  _onItemDoubleClick(isFolder: boolean, id: number, name: string) {
-
+  _onItemDoubleClick(isFolder: boolean, id: string, name: string) {
     if (isFolder) {
       this._onFolderDoubleClick(id, name);
     } else {
@@ -124,13 +140,11 @@ class Picker extends React.Component<PickerProps, PickerState> {
     }
   }
 
-  _onCloseButtonClick() { }
+  _onCloseButtonClick() {}
 
-  _onChooseButtonClick(id: number) {
+  _onChooseButtonClick(id: string) {}
 
-  }
-
-  _onNavigationClick(folderId: number) {
+  _onNavigationClick(folderId: string) {
     const { path } = this.state;
     const indexOfCurrentId = path.indexOf(folderId);
 
@@ -140,7 +154,10 @@ class Picker extends React.Component<PickerProps, PickerState> {
     });
   }
 
-  componentDidUpdate(prevProps: PickerProps, { folders: prevFolders }: PickerState) {
+  componentDidUpdate(
+    prevProps: PickerProps,
+    { folders: prevFolders }: PickerState
+  ) {
     const { folders } = this.state;
 
     if (folders !== prevFolders) {
@@ -152,31 +169,34 @@ class Picker extends React.Component<PickerProps, PickerState> {
     const { path, folders } = this.state;
 
     return (
-      <Navigation
-        path={path}
-        folders={folders}
-        onNameClick={this._onNavigationClick}
-      />
+      <Header>
+        <Navigation
+          path={path}
+          folders={folders}
+          onNameClick={this._onNavigationClick}
+        />
+      </Header>
     );
   }
 
   _renderItems() {
-    const { path, folders, selectedItemId } = this.state;
-    const currentFolderId = path.last();
-    const currentItems = folders.getIn([String(currentFolderId), 'items']);
+    const { folders, selectedItemId } = this.state;
+    const currentFolderId = this._getCurrentFolderId();
+    const currentItems = folders.getIn([currentFolderId, "items"], null);
 
     return (
-      <div>
-        {currentItems === null ?
-          <Loader /> :
+      <Section>
+        {currentItems === null ? (
+          <Loader />
+        ) : (
           <ItemsList
             selectedItemId={selectedItemId}
             items={currentItems}
             onItemClick={this._onItemClick}
             onItemDoubleClick={this._onItemDoubleClick}
           />
-        }
-      </div>
+        )}
+      </Section>
     );
   }
 
@@ -184,7 +204,9 @@ class Picker extends React.Component<PickerProps, PickerState> {
     return (
       <Footer>
         <CancelButton onClick={this._onCloseButtonClick}>Cancel</CancelButton>
-        <DefaultButton onClick={this._onChooseButtonClick}>Choose</DefaultButton>
+        <DefaultButton onClick={this._onChooseButtonClick}>
+          Choose
+        </DefaultButton>
       </Footer>
     );
   }
@@ -194,14 +216,17 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
     return (
       <Wrapper>
-        {isReady ?
+        {isReady ? (
           <PickerWapper>
-            <Header>{this._renderHeader()}</Header>
-            <Section>{this._renderItems()}</Section>
+            {this._renderHeader()}
+            {this._renderItems()}
             {this._renderFooter()}
-          </PickerWapper> :
-          <DefaultButton onClick={this._getToken}>pCloud</DefaultButton>
-        }
+          </PickerWapper>
+        ) : (
+          <DefaultButton onClick={this._getToken}>
+            {ROOT_FOLDER_NAME}
+          </DefaultButton>
+        )}
       </Wrapper>
     );
   }
@@ -243,24 +268,24 @@ const Pulsate = keyframes`
 `;
 
 const Loader = styled.div`
-position: absolute;
-width: 50px;
-height: 50px;
-top: 50%;
-left: 50%;
-margin: -25px 0 0 -25px;
-border: 4px solid #20bed6;
-border-radius: 30px;
-animation: ${Pulsate} 1s ease-out;
-animation-iteration-count: infinite;
-opacity: 0;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+  border: 4px solid #20bed6;
+  border-radius: 30px;
+  animation: ${Pulsate} 1s ease-out;
+  animation-iteration-count: infinite;
+  opacity: 0;
 `;
 
 const Footer = styled.footer`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #e9e9e9;
   height: 70px;
 `;
 
@@ -280,7 +305,7 @@ const DefaultButton = styled.div`
 `;
 
 const CancelButton = DefaultButton.extend`
-  background: #FFFFFF;
-  border: 1px solid #E9E9E9;
+  background: #ffffff;
+  border: 1px solid #e9e9e9;
   color: #999;
 `;

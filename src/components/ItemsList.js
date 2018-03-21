@@ -1,9 +1,9 @@
 // @flow
 
-import * as React from 'react';
-import { List } from 'immutable';
-import styled from 'styled-components';
-import { Item } from '.';
+import * as React from "react";
+import { List } from "immutable";
+import styled from "styled-components";
+import { Item } from ".";
 
 type ItemsListProps = {
   selectedItemId: number,
@@ -13,13 +13,25 @@ type ItemsListProps = {
 };
 
 class ItemsList extends React.Component<ItemsListProps, {}> {
-  constructor() {
-    super();
+  static defaultProps = {
+    selectedItemId: "0",
+    items: null,
+    onItemClick: () => {},
+    onItemDoubleClick: () => {}
+  };
+
+  constructor(props: ItemsListProps) {
+    super(props);
 
     (this: any)._renderRow = this._renderRow.bind(this);
   }
 
-  _renderRow(item: { id: string, iconId: number, name: string, isFolder: boolean }) {
+  _renderRow(item: {
+    id: string,
+    iconId: number,
+    name: string,
+    isFolder: boolean
+  }) {
     const { selectedItemId, onItemClick, onItemDoubleClick } = this.props;
     const { id, iconId, name, isFolder } = item;
 
@@ -48,10 +60,11 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
 
     return (
       <Table>
-        {items.size === 0 ?
-          <EmptyFolder>This folder is emptry.</EmptyFolder> :
+        {items.size === 0 ? (
+          <EmptyFolder>This folder is emptry.</EmptyFolder>
+        ) : (
           this._renderItems()
-        }
+        )}
       </Table>
     );
   }
@@ -68,7 +81,7 @@ const EmptyFolder = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   font-size: 13px;
   color: #ababab;
 `;
