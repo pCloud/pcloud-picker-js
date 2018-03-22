@@ -77,7 +77,7 @@ const Table = styled.div`
   font-family: "Arial Narrow", Arial;
 `;
 
-const EmptyFolder = styled.div`
+export const EmptyFolder = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;

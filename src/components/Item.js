@@ -62,7 +62,7 @@ class Item extends React.Component<ItemProps, {}> {
 
 export default Item;
 
-const Row = styled.div`
+export const Row = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -73,7 +73,7 @@ const Row = styled.div`
   box-sizing: border-box;
 `;
 
-const ItemName = styled.div`
+export const ItemName = styled.div`
   margin-left: 10px;
   max-width: 100%;
   overflow: hidden;
