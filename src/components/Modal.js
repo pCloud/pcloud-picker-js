@@ -18,10 +18,12 @@ class Modal extends React.Component<ModalProps, {}> {
       return null;
     }
 
-    return [
-      <ModalContent>{children}</ModalContent>,
-      <ModalOverlay onClick={onCloseModal} />
-    ];
+    return (
+      <ModalWrapper>
+        <ModalContent>{children}</ModalContent>
+        <ModalOverlay onClick={onCloseModal} />
+      </ModalWrapper>
+    );
   }
 
   render() {
@@ -32,6 +34,16 @@ class Modal extends React.Component<ModalProps, {}> {
 }
 
 export default Modal;
+
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  font: 11px/34px Arial, Helvetica;
+  color: #999;
+`;
 
 const ModalContent = styled.div`
   position: fixed;
@@ -47,8 +59,8 @@ const ModalOverlay = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
-  background: grey;
+  background: #000;
   overflow: hidden;
-  opacity: 0.3;
+  opacity: 0.75;
   z-index: 5000;
 `;
