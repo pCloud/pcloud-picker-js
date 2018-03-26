@@ -25,8 +25,8 @@ class Item extends React.Component<ItemProps, {}> {
     onItemDoubleClick: () => {}
   };
 
-  constructor() {
-    super();
+  constructor(props: ItemProps) {
+    super(props);
 
     (this: any)._onClick = this._onClick.bind(this);
     (this: any)._onDoubleClick = this._onDoubleClick.bind(this);

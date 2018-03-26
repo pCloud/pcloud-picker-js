@@ -4,17 +4,14 @@ import * as React from "react";
 import pcloudSdk from "pcloud-sdk-js";
 import styled, { keyframes } from "styled-components";
 import { List, Map } from "immutable";
-import { Navigation, ItemsList } from ".";
+import { Navigation, ItemsList, Modal } from ".";
 import { parseItem } from "../utils";
-import {
-  ROOT_FOLDER_ID,
-  ROOT_FOLDER_NAME,
-  CLIENT_ID,
-  REDIRECT_URI
-} from "../config/constants";
+import { ROOT_FOLDER_ID, ROOT_FOLDER_NAME } from "../config/constants";
 
 type PickerProps = {
-  onSelect: () => void,
+  clientId: string,
+  redirectUri: string,
+  onSelect: number => void,
   onClose: () => void
 };
 
@@ -31,8 +28,8 @@ type PickerState = {
 };
 
 class Picker extends React.Component<PickerProps, PickerState> {
-  constructor() {
-    super();
+  constructor(props: PickerProps) {
+    super(props);
 
     this.state = {
       isReady: false,
@@ -58,9 +55,10 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   _getToken() {
+    const { clientId, redirectUri } = this.props;
     pcloudSdk.oauth.initOauthToken({
-      client_id: CLIENT_ID,
-      redirect_uri: REDIRECT_URI,
+      client_id: clientId,
+      redirect_uri: redirectUri,
       receiveToken: this._receiveToken
     });
   }
@@ -81,7 +79,10 @@ class Picker extends React.Component<PickerProps, PickerState> {
     return (this: any)._client
       .listfolder(folderId, { iconformat: "id" })
       .then(res => res.contents)
-      .then(items => items.map(parseItem));
+      .then(items => items.map(parseItem))
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   _getCurrentFolderId(): string {
@@ -136,13 +137,39 @@ class Picker extends React.Component<PickerProps, PickerState> {
     if (isFolder) {
       this._onFolderDoubleClick(id, name);
     } else {
-      this._onChooseButtonClick(id);
+      this._onChooseButtonClick();
     }
   }
 
-  _onCloseButtonClick() {}
+  _onCloseButtonClick() {
+    const { isReady } = this.state;
+    const { onClose } = this.props;
 
-  _onChooseButtonClick(id: string) {}
+    onClose();
+
+    if (isReady) {
+      this.setState({
+        isReady: false,
+        selectedItemId: ROOT_FOLDER_ID,
+        path: List(ROOT_FOLDER_ID)
+      });
+    }
+  }
+
+  _onChooseButtonClick() {
+    const { selectedItemId, isReady } = this.state;
+    const { onSelect } = this.props;
+
+    onSelect(+selectedItemId);
+
+    if (isReady) {
+      this.setState({
+        isReady: false,
+        selectedItemId: ROOT_FOLDER_ID,
+        path: List(ROOT_FOLDER_ID)
+      });
+    }
+  }
 
   _onNavigationClick(folderId: string) {
     const { path } = this.state;
@@ -213,20 +240,22 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
   render() {
     const { isReady } = this.state;
+    const container = document.getElementById("modal");
 
     return (
       <Wrapper>
-        {isReady ? (
-          <PickerWapper>
-            {this._renderHeader()}
-            {this._renderItems()}
-            {this._renderFooter()}
-          </PickerWapper>
-        ) : (
-          <DefaultButton onClick={this._getToken}>
-            {ROOT_FOLDER_NAME}
-          </DefaultButton>
-        )}
+        <Modal
+          container={container}
+          show={isReady}
+          onCloseModal={this._onCloseButtonClick}
+        >
+          {this._renderHeader()}
+          {this._renderItems()}
+          {this._renderFooter()}
+        </Modal>
+        <DefaultButton onClick={this._getToken}>
+          {ROOT_FOLDER_NAME}
+        </DefaultButton>
       </Wrapper>
     );
   }
@@ -235,21 +264,14 @@ class Picker extends React.Component<PickerProps, PickerState> {
 export default Picker;
 
 const Wrapper = styled.div`
-  margin: 10px;
   font: 11px/34px Arial, Helvetica;
-  color: #999;
-`;
-
-const PickerWapper = styled.div`
-  width: 30vw;
-  min-width: 500px;
-  user-select: none;
 `;
 
 const Header = styled.header`
   border: 1px solid #e9e9e9;
   border-bottom: 0;
   box-sizing: border-box;
+  background: #fff;
 `;
 
 const Section = styled.section`
@@ -259,6 +281,7 @@ const Section = styled.section`
   border-bottom: 0;
   box-sizing: border-box;
   overflow-x: hidden;
+  background: #fff;
 `;
 
 const Pulsate = keyframes`
@@ -287,6 +310,7 @@ const Footer = styled.footer`
   align-items: center;
   border: 1px solid #e9e9e9;
   height: 70px;
+  background: #fff;
 `;
 
 const DefaultButton = styled.div`
@@ -298,6 +322,7 @@ const DefaultButton = styled.div`
   height: 28px;
   width: 50px;
   line-height: 28px;
+  font-family: Arial, Helvetica;
   font-weight: bold;
   text-align: center;
   border-radius: 3px;
