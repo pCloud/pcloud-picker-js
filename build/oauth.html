@@ -1,0 +1,18 @@
+<html>
+
+<head>
+  <title>Receiving Oauth Token</title>
+  <script>
+    var matchToken = location.hash.match(/access_token=([^&]+)/);
+    var matchCode = location.search.match(/code=([^&]+)/);
+    var token = matchToken ? matchToken[1] : matchCode[1];
+
+    window.opener.__setPcloudToken(token);
+    window.close();
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>
