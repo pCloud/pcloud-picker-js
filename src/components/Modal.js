@@ -11,7 +11,7 @@ type ModalProps = {
 };
 
 class Modal extends React.Component<ModalProps, {}> {
-  renderModal() {
+  _renderModal() {
     const { children, show, onCloseModal } = this.props;
 
     if (!show) {
@@ -29,7 +29,7 @@ class Modal extends React.Component<ModalProps, {}> {
   render() {
     const { container } = this.props;
 
-    return createPortal(this.renderModal(), container);
+    return createPortal(this._renderModal(), container);
   }
 }
 

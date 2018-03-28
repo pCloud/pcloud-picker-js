@@ -1,4 +1,5 @@
 {
+  "main": "src/index.js",
   "name": "pcloud-folder-picker",
   "version": "0.1.0",
   "private": true,
@@ -37,7 +38,8 @@
   "jest": {
     "clearMocks": true,
     "moduleNameMapper": {
-      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
+      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$":
+        "jest-transform-stub"
     },
     "setupTestFrameworkScriptFile": "./src/tests/enzymeReact.js"
   }

@@ -1,9 +1,8 @@
 import * as React from "react";
-import { shallow, mount, render } from "enzyme";
-import renderer from "react-test-renderer";
+import { shallow, mount } from "enzyme";
 import "jest-styled-components";
 
-import { Picker } from "../../components";
+import { Picker, Modal } from "../../components";
 
 describe("<Picker />", () => {
   describe("render", () => {
@@ -12,15 +11,18 @@ describe("<Picker />", () => {
     });
   });
 
+  const modalRoot = global.document.createElement("div");
+  modalRoot.setAttribute("id", "modal");
+  const body = global.document.querySelector("body");
+  body.appendChild(modalRoot);
+
   describe("<DefaultButton />", () => {
-    it("should get user token", () => {
+    it("should get user token and open modal", () => {
       const picker = mount(<Picker />);
-      // console.log(picker.debug());
-      // const defaultButton = picker.find("Picker__DefaultButton");
-      // expect(defaultButton).toBeDefined();
-      // defaultButton.simulate("click");
-      // expect(defaultButton).not.toBeDefined();
-      // expect(picker.find("Picker__PickerWrapper")).toBeDefined();
+      const defaultButton = picker.find("Picker__DefaultButton");
+      expect(modalRoot.hasChildNodes()).toBeFalsy();
+      defaultButton.simulate("click");
+      expect(modalRoot.hasChildNodes()).toBeDefined();
     });
   });
 });

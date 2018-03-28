@@ -6,7 +6,7 @@ import { Navigation } from "../../components";
 
 describe("<Navigation />", () => {
   describe("render", () => {
-    it("renders component correctly", () => {
+    it("should renders component correctly", () => {
       expect(shallow(<Navigation />)).toMatchSnapshot();
     });
   });

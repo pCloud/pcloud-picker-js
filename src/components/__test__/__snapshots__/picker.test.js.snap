@@ -19,7 +19,11 @@ ShallowWrapper {
     "props": Object {
       "children": Array [
         <Modal
-          container={null}
+          container={
+            <div
+              id="modal"
+            />
+          }
           onCloseModal={[Function]}
           show={false}
         >
@@ -106,7 +110,9 @@ ShallowWrapper {
               </Picker__DefaultButton>
             </Picker__Footer>,
           ],
-          "container": null,
+          "container": <div
+            id="modal"
+          />,
           "onCloseModal": [Function],
           "show": false,
         },
@@ -249,7 +255,11 @@ ShallowWrapper {
       "props": Object {
         "children": Array [
           <Modal
-            container={null}
+            container={
+              <div
+                id="modal"
+              />
+            }
             onCloseModal={[Function]}
             show={false}
           >
@@ -336,7 +346,9 @@ ShallowWrapper {
                 </Picker__DefaultButton>
               </Picker__Footer>,
             ],
-            "container": null,
+            "container": <div
+              id="modal"
+            />,
             "onCloseModal": [Function],
             "show": false,
           },
