@@ -1,5 +1,5 @@
 {
-  "main": "src/index.js",
+  "main": "build/static/js/main.637bf8ae.js",
   "name": "pcloud-folder-picker",
   "version": "0.1.0",
   "private": true,
