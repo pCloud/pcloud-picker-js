@@ -5,13 +5,13 @@ import pcloudSdk from "pcloud-sdk-js";
 import styled, { keyframes } from "styled-components";
 import { List, Map } from "immutable";
 import { Navigation, ItemsList, Modal } from ".";
-import { parseItem } from "../utils";
+import { parseItem, parseSelectedItem } from "../utils";
 import { ROOT_FOLDER_ID, ROOT_FOLDER_NAME } from "../config/constants";
 
 type PickerProps = {
   clientId: string,
   redirectUri: string,
-  onSelect: number => void,
+  onSelect: any => void,
   onClose: () => void
 };
 
@@ -91,6 +91,31 @@ class Picker extends React.Component<PickerProps, PickerState> {
     return path.last() || ROOT_FOLDER_ID;
   }
 
+  _getSelectedItem() {
+    const { selectedItemId, folders } = this.state;
+    const items = folders.getIn([this._getCurrentFolderId(), "items"], null);
+
+    if (selectedItemId === this._getCurrentFolderId()) {
+      const selectedItem = {
+        id: selectedItemId,
+        isFolder: true,
+        name: folders.getIn([selectedItemId, "folderName"])
+      };
+      // console.log(selectedItem);
+
+      return selectedItem;
+    } else if (items !== null) {
+      const selectedItem = parseSelectedItem(
+        items.find(item => item.id === selectedItemId)
+      );
+
+      // console.log(selectedItem);
+      return selectedItem;
+    }
+
+    return null;
+  }
+
   _setItems() {
     const { folders } = this.state;
     const currentFolderId = this._getCurrentFolderId();
@@ -157,10 +182,10 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   _onChooseButtonClick() {
-    const { selectedItemId, isReady } = this.state;
+    const { isReady } = this.state;
     const { onSelect } = this.props;
 
-    onSelect(+selectedItemId);
+    onSelect(this._getSelectedItem());
 
     if (isReady) {
       this.setState({
@@ -181,6 +206,13 @@ class Picker extends React.Component<PickerProps, PickerState> {
     });
   }
 
+  componentWillMount() {
+    const modal = document.createElement("div");
+    modal.setAttribute("id", "modal");
+    const body = global.document.querySelector("body");
+    body.appendChild(modal);
+  }
+
   componentDidUpdate(
     prevProps: PickerProps,
     { folders: prevFolders }: PickerState
@@ -190,6 +222,12 @@ class Picker extends React.Component<PickerProps, PickerState> {
     if (folders !== prevFolders) {
       this._setItems();
     }
+  }
+
+  componentWillUnmount() {
+    const modal = document.getElementById("modal");
+    const body = global.document.querySelector("body");
+    body.removeChild(modal);
   }
 
   _renderHeader() {

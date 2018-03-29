@@ -1,24 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { Picker } from "./components";
-import registerServiceWorker from "./registerServiceWorker";
+import PcloudPicker from "./picker";
 
-registerServiceWorker();
+const CLIENT_ID = "lh4j5JDeeCB";
+const REDIRECT_URI = "http://localhost:3000/oauth.html";
 
-const PcloudPicker = {
-  createPcloudButton(options) {
-    const { clientId, redirectUri, container, onSelect, onClose } = options;
-
-    return ReactDOM.render(
-      <Picker
-        clientId={clientId}
-        redirectUri={redirectUri}
-        onSelect={onSelect}
-        onClose={onClose}
-      />,
-      container
-    );
-  }
-};
-
-export default PcloudPicker;
+PcloudPicker.createPcloudButton({
+  clientId: CLIENT_ID,
+  redirectUri: REDIRECT_URI,
+  container: document.getElementById("pcloud-btn"),
+  onSelect: item => {
+    console.log(item);
+  },
+  onClose: () => {}
+});

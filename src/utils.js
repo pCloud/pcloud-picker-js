@@ -15,4 +15,14 @@ export const parseItem = ({
   iconId: icon
 });
 
+export const parseSelectedItem = ({
+  id = "",
+  isFolder = false,
+  name = ""
+}) => ({
+  id: id,
+  isFolder: isFolder,
+  name: name
+});
+
 export const getIcon = iconId => icons[iconId];
