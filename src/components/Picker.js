@@ -6,12 +6,46 @@ import styled, { keyframes } from "styled-components";
 import { List, Map } from "immutable";
 import { Navigation, ItemsList, Modal } from ".";
 import { parseItem, parseSelectedItem } from "../utils";
+import type { selectedItemType } from "../utils";
 import { ROOT_FOLDER_ID, ROOT_FOLDER_NAME } from "../config/constants";
 
+const MODAL_CLASS = "pcloud-modal";
+const BODY = global.document.querySelector("body");
+
+const initialState = {
+  isAuthenticated: false,
+  isModalOpen: false,
+  path: List([ROOT_FOLDER_ID]),
+  folders: Map({
+    [ROOT_FOLDER_ID]: {
+      folderName: ROOT_FOLDER_NAME,
+      items: null
+    }
+  }),
+  selectedItemId: ROOT_FOLDER_ID
+};
+
+const resetState = {
+  isModalOpen: false,
+  path: List([ROOT_FOLDER_ID]),
+  folders: Map({
+    [ROOT_FOLDER_ID]: {
+      folderName: ROOT_FOLDER_NAME,
+      items: null
+    }
+  }),
+  selectedItemId: ROOT_FOLDER_ID
+};
+
 type PickerProps = {
+  mode: string,
   clientId: string,
   redirectUri: string,
+  buttonText: string,
+  fileUrl: string,
+  onSuccess: () => void,
   onSelect: any => void,
+  onError: any => void,
   onClose: () => void
 };
 
@@ -21,27 +55,28 @@ type folder = {
 };
 
 type PickerState = {
-  isReady: boolean,
+  isAuthenticated: boolean,
+  isModalOpen: boolean,
   path: List<string>,
   folders: Map<string, folder>,
   selectedItemId: string
 };
 
 class Picker extends React.Component<PickerProps, PickerState> {
+  static defaultProps = {
+    clientId: "",
+    redirectUri: "",
+    onSelect: () => {},
+    onClose: () => {},
+    fileUrl: "",
+    onSuccess: () => {},
+    onError: () => {}
+  };
+
   constructor(props: PickerProps) {
     super(props);
 
-    this.state = {
-      isReady: false,
-      path: List([ROOT_FOLDER_ID]),
-      folders: Map({
-        [ROOT_FOLDER_ID]: {
-          folderName: ROOT_FOLDER_NAME,
-          items: null
-        }
-      }),
-      selectedItemId: ROOT_FOLDER_ID
-    };
+    this.state = initialState;
 
     (this: any)._client = null;
     (this: any)._receiveToken = this._receiveToken.bind(this);
@@ -56,22 +91,28 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
   _getToken() {
     const { clientId, redirectUri } = this.props;
-    pcloudSdk.oauth.initOauthToken({
-      client_id: clientId,
-      redirect_uri: redirectUri,
-      receiveToken: this._receiveToken
-    });
+    const { isAuthenticated } = this.state;
+
+    if (!isAuthenticated) {
+      pcloudSdk.oauth.initOauthToken({
+        client_id: clientId,
+        redirect_uri: redirectUri,
+        receiveToken: this._receiveToken
+      });
+    }
+
+    this.setState({ isModalOpen: true });
   }
 
   _receiveToken(token: string) {
     (this: any)._client = this._getClient(token);
 
     this._setItems();
-    this.setState({ isReady: true });
+    this.setState({ isAuthenticated: true });
   }
 
   _getClient(token: string) {
-    //handle errors
+    // handle errors
     return pcloudSdk.createClient(token);
   }
 
@@ -85,32 +126,38 @@ class Picker extends React.Component<PickerProps, PickerState> {
       });
   }
 
+  _uploadFile() {
+    const { fileUrl } = this.props;
+    const { selectedItemId } = this.state;
+
+    (this: any)._client
+      .remoteupload(fileUrl, selectedItemId)
+      .then(data => {
+        if (data !== null) {
+          this.setState(resetState);
+        }
+      })
+      .catch(err => console.log(err));
+  }
+
   _getCurrentFolderId(): string {
     const { path } = this.state;
 
     return path.last() || ROOT_FOLDER_ID;
   }
 
-  _getSelectedItem() {
+  _getSelectedItem(): selectedItemType | null {
     const { selectedItemId, folders } = this.state;
     const items = folders.getIn([this._getCurrentFolderId(), "items"], null);
 
     if (selectedItemId === this._getCurrentFolderId()) {
-      const selectedItem = {
+      return {
         id: selectedItemId,
         isFolder: true,
-        name: folders.getIn([selectedItemId, "folderName"])
+        name: folders.getIn([selectedItemId, "folderName"], "")
       };
-      // console.log(selectedItem);
-
-      return selectedItem;
     } else if (items !== null) {
-      const selectedItem = parseSelectedItem(
-        items.find(item => item.id === selectedItemId)
-      );
-
-      // console.log(selectedItem);
-      return selectedItem;
+      return parseSelectedItem(items.find(item => item.id === selectedItemId));
     }
 
     return null;
@@ -127,6 +174,21 @@ class Picker extends React.Component<PickerProps, PickerState> {
           folders: folders.setIn([currentFolderId, "items"], List(items))
         })
       );
+    }
+  }
+
+  _getPath(folderId: string) {
+    const { path } = this.state;
+    const indexOfCurrentId = path.indexOf(folderId);
+
+    return path.slice(0, indexOfCurrentId + 1);
+  }
+
+  _selectItem(id: string) {
+    const { selectedItemId } = this.state;
+
+    if (id !== selectedItemId) {
+      this.setState({ selectedItemId: id });
     }
   }
 
@@ -150,11 +212,23 @@ class Picker extends React.Component<PickerProps, PickerState> {
     }
   }
 
-  _onItemClick(id: string) {
-    const { selectedItemId } = this.state;
+  _onFileDoubleClick() {
+    const { mode } = this.props;
 
-    if (id !== selectedItemId) {
-      this.setState({ selectedItemId: id });
+    if (mode === "select") {
+      this._onChooseButtonClick();
+    }
+  }
+
+  _onItemClick(id: string, isFolder: boolean) {
+    const { mode } = this.props;
+
+    if (mode === "upload" && isFolder) {
+      this._selectItem(id);
+    }
+
+    if (mode === "select") {
+      this._selectItem(id);
     }
   }
 
@@ -162,55 +236,42 @@ class Picker extends React.Component<PickerProps, PickerState> {
     if (isFolder) {
       this._onFolderDoubleClick(id, name);
     } else {
-      this._onChooseButtonClick();
+      this._onFileDoubleClick();
     }
   }
 
   _onCloseButtonClick() {
-    const { isReady } = this.state;
     const { onClose } = this.props;
 
     onClose();
 
-    if (isReady) {
-      this.setState({
-        isReady: false,
-        selectedItemId: ROOT_FOLDER_ID,
-        path: List(ROOT_FOLDER_ID)
-      });
-    }
+    this.setState(resetState);
   }
 
   _onChooseButtonClick() {
-    const { isReady } = this.state;
-    const { onSelect } = this.props;
+    const { mode, onSelect } = this.props;
 
-    onSelect(this._getSelectedItem());
+    if (mode === "select") {
+      onSelect(this._getSelectedItem());
+      this.setState(resetState);
+    }
 
-    if (isReady) {
-      this.setState({
-        isReady: false,
-        selectedItemId: ROOT_FOLDER_ID,
-        path: List(ROOT_FOLDER_ID)
-      });
+    if (mode === "upload") {
+      this._uploadFile();
     }
   }
 
   _onNavigationClick(folderId: string) {
-    const { path } = this.state;
-    const indexOfCurrentId = path.indexOf(folderId);
-
     this.setState({
-      path: path.slice(0, indexOfCurrentId + 1),
+      path: this._getPath(folderId),
       selectedItemId: folderId
     });
   }
 
   componentWillMount() {
     const modal = document.createElement("div");
-    modal.setAttribute("id", "modal");
-    const body = global.document.querySelector("body");
-    body.appendChild(modal);
+    modal.setAttribute("id", MODAL_CLASS);
+    BODY.appendChild(modal);
   }
 
   componentDidUpdate(
@@ -225,9 +286,8 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   componentWillUnmount() {
-    const modal = document.getElementById("modal");
-    const body = global.document.querySelector("body");
-    body.removeChild(modal);
+    const elModal = document.getElementById(MODAL_CLASS);
+    BODY.removeChild(elModal);
   }
 
   _renderHeader() {
@@ -246,6 +306,8 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
   _renderItems() {
     const { folders, selectedItemId } = this.state;
+    const { mode } = this.props;
+    const isItemDisabled = mode === "upload";
     const currentFolderId = this._getCurrentFolderId();
     const currentItems = folders.getIn([currentFolderId, "items"], null);
 
@@ -255,6 +317,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
           <Loader />
         ) : (
           <ItemsList
+            isItemDisabled={isItemDisabled}
             selectedItemId={selectedItemId}
             items={currentItems}
             onItemClick={this._onItemClick}
@@ -269,31 +332,30 @@ class Picker extends React.Component<PickerProps, PickerState> {
     return (
       <Footer>
         <CancelButton onClick={this._onCloseButtonClick}>Cancel</CancelButton>
-        <DefaultButton onClick={this._onChooseButtonClick}>
+        <ChooseButton isDisabled={false} onClick={this._onChooseButtonClick}>
           Choose
-        </DefaultButton>
+        </ChooseButton>
       </Footer>
     );
   }
 
   render() {
-    const { isReady } = this.state;
-    const container = document.getElementById("modal");
+    const { isModalOpen } = this.state;
+    const { buttonText } = this.props;
+    const elModal = document.getElementById(MODAL_CLASS);
 
     return (
       <Wrapper>
         <Modal
-          container={container}
-          show={isReady}
+          container={elModal}
+          show={isModalOpen}
           onCloseModal={this._onCloseButtonClick}
         >
           {this._renderHeader()}
           {this._renderItems()}
           {this._renderFooter()}
         </Modal>
-        <DefaultButton onClick={this._getToken}>
-          {ROOT_FOLDER_NAME}
-        </DefaultButton>
+        <DefaultButton onClick={this._getToken}>{buttonText}</DefaultButton>
       </Wrapper>
     );
   }
@@ -358,7 +420,9 @@ const DefaultButton = styled.div`
   margin: 10px;
   padding: 0 20px;
   height: 28px;
-  width: 50px;
+  max-width: 150px;
+  min-width: 50px;
+  width: auto;
   line-height: 28px;
   font-family: Arial, Helvetica;
   font-weight: bold;
@@ -367,8 +431,17 @@ const DefaultButton = styled.div`
   user-select: none;
 `;
 
+const ChooseButton = DefaultButton.extend`
+  background: ${props => (props.isDisabled ? "#eaeaea" : "#20bed6")};
+  color: ${props => (props.isDisabled ? "#999" : "#fff")};
+  &:hover {
+    cursor: ${props => (props.isDisabled ? "not-allowed" : "pointer")};
+  }
+  width: 50px;
+`;
 const CancelButton = DefaultButton.extend`
   background: #ffffff;
   border: 1px solid #e9e9e9;
   color: #999;
+  width: 50px;
 `;

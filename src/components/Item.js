@@ -5,12 +5,14 @@ import styled from "styled-components";
 import { getIcon } from "../utils";
 
 type ItemProps = {
+  mode: string,
   id: string,
   iconId: number,
   name: string,
+  isItemDisabled: boolean,
   isFolder: boolean,
   isSelected: boolean,
-  onItemClick: (id: string) => void,
+  onItemClick: (id: string, isFolder: boolean) => void,
   onItemDoubleClick: (isFolder: boolean, id: string, name: string) => void
 };
 
@@ -19,6 +21,7 @@ class Item extends React.Component<ItemProps, {}> {
     id: "0",
     iconId: 0,
     name: "",
+    isItemDisabled: false,
     isFolder: false,
     isSelected: false,
     onItemClick: () => {},
@@ -33,9 +36,9 @@ class Item extends React.Component<ItemProps, {}> {
   }
 
   _onClick() {
-    const { id, onItemClick } = this.props;
+    const { id, isFolder, onItemClick } = this.props;
 
-    onItemClick(id);
+    onItemClick(id, isFolder);
   }
 
   _onDoubleClick() {
@@ -45,15 +48,18 @@ class Item extends React.Component<ItemProps, {}> {
   }
 
   render() {
-    const { name, iconId, isSelected } = this.props;
+    const { name, iconId, isItemDisabled, isSelected, isFolder } = this.props;
+    const isFileDisabled = isItemDisabled && !isFolder;
+    const itemIcon = isFileDisabled ? 0 : iconId;
 
     return (
       <Row
+        isDisabled={isFileDisabled}
         isSelected={isSelected}
         onClick={this._onClick}
         onDoubleClick={this._onDoubleClick}
       >
-        <img src={getIcon(iconId)} alt="icon" />
+        <img src={getIcon(itemIcon)} alt="icon" />
         <ItemName>{name}</ItemName>
       </Row>
     );

@@ -18,8 +18,8 @@ type NavigationProps = {
 
 class Navigation extends React.Component<NavigationProps, {}> {
   static defaultProps = {
-    path: [],
-    folders: {},
+    path: List(),
+    folders: Map(),
     onNameClick: () => {}
   };
 
@@ -35,26 +35,27 @@ class Navigation extends React.Component<NavigationProps, {}> {
     return folders.getIn([folderId, "folderName"], "");
   }
 
-  _renderFolder(folderId: string, index: number) {
-    const { onNameClick } = this.props;
-    const folderName = this._getFolderName(folderId);
-    const shouldRenderIcon = index > 0;
+  _renderFolder(onNameClick: () => void) {
+    return (folderId: string, index: number) => {
+      const folderName = this._getFolderName(folderId);
+      const shouldRenderIcon = index > 0;
 
-    return (
-      <NavigationFolder
-        key={folderId}
-        id={folderId}
-        name={folderName}
-        onNameClick={onNameClick}
-        shouldRenderIcon={shouldRenderIcon}
-      />
-    );
+      return (
+        <NavigationFolder
+          key={folderId}
+          id={folderId}
+          name={folderName}
+          onNameClick={onNameClick}
+          shouldRenderIcon={shouldRenderIcon}
+        />
+      );
+    };
   }
 
   render() {
-    const { path } = this.props;
+    const { path, onNameClick } = this.props;
 
-    return <Path>{path.map(this._renderFolder)}</Path>;
+    return <Path>{path.map(this._renderFolder(onNameClick))}</Path>;
   }
 }
 

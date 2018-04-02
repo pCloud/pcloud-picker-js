@@ -37,7 +37,7 @@ class NavigationFolder extends React.Component<NavigationFolderProps, {}> {
 
     return (
       <Wrapper>
-        {shouldRenderIcon ? <img src={ArrowIcon} alt="arrow-icon" /> : null}
+        {shouldRenderIcon && <img src={ArrowIcon} alt="arrow-icon" />}
         <FolderName onClick={this._onClick}>{name}</FolderName>
       </Wrapper>
     );

@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Item } from ".";
 
 type ItemsListProps = {
+  isItemDisabled: boolean,
   selectedItemId: number,
   items: List<any>,
   onItemClick: () => void,
@@ -14,6 +15,7 @@ type ItemsListProps = {
 
 class ItemsList extends React.Component<ItemsListProps, {}> {
   static defaultProps = {
+    isItemDisabled: false,
     selectedItemId: "0",
     items: null,
     onItemClick: () => {},
@@ -32,7 +34,12 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
     name: string,
     isFolder: boolean
   }) {
-    const { selectedItemId, onItemClick, onItemDoubleClick } = this.props;
+    const {
+      isItemDisabled,
+      selectedItemId,
+      onItemClick,
+      onItemDoubleClick
+    } = this.props;
     const { id, iconId, name, isFolder } = item;
 
     return (
@@ -41,6 +48,7 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
         id={id}
         iconId={iconId}
         name={name}
+        isItemDisabled={isItemDisabled}
         isFolder={isFolder}
         isSelected={selectedItemId === id ? true : false}
         onItemClick={onItemClick}
