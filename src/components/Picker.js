@@ -215,7 +215,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
     });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this._setItems();
   }
 
