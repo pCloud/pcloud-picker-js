@@ -1,49 +1,20 @@
 // @flow
 
 import * as React from "react";
-import pcloudSdk from "pcloud-sdk-js";
 import styled, { keyframes } from "styled-components";
 import { List, Map } from "immutable";
-import { Navigation, ItemsList, Modal } from ".";
+import { Navigation, ItemsList } from ".";
 import { parseItem, parseSelectedItem } from "../utils";
 import type { selectedItemType } from "../utils";
 import { ROOT_FOLDER_ID, ROOT_FOLDER_NAME } from "../config/constants";
 
-const MODAL_CLASS = "pcloud-modal";
-const BODY = global.document.querySelector("body");
-
-const initialState = {
-  isAuthenticated: false,
-  isModalOpen: false,
-  path: List([ROOT_FOLDER_ID]),
-  folders: Map({
-    [ROOT_FOLDER_ID]: {
-      folderName: ROOT_FOLDER_NAME,
-      items: null
-    }
-  }),
-  selectedItemId: ROOT_FOLDER_ID
-};
-
-const resetState = {
-  isModalOpen: false,
-  path: List([ROOT_FOLDER_ID]),
-  folders: Map({
-    [ROOT_FOLDER_ID]: {
-      folderName: ROOT_FOLDER_NAME,
-      items: null
-    }
-  }),
-  selectedItemId: ROOT_FOLDER_ID
-};
-
 type PickerProps = {
   mode: string,
-  clientId: string,
-  redirectUri: string,
+  client: any,
   buttonText: string,
   fileUrl: string,
-  onSuccess: () => void,
+  onPick: () => void,
+  onModalClose: () => void,
   onSelect: any => void,
   onError: any => void,
   onClose: () => void
@@ -55,22 +26,28 @@ type folder = {
 };
 
 type PickerState = {
-  isAuthenticated: boolean,
-  isModalOpen: boolean,
   path: List<string>,
   folders: Map<string, folder>,
   selectedItemId: string
 };
 
+const initialState = {
+  path: List([ROOT_FOLDER_ID]),
+  folders: Map({
+    [ROOT_FOLDER_ID]: {
+      folderName: ROOT_FOLDER_NAME,
+      items: null
+    }
+  }),
+  selectedItemId: ROOT_FOLDER_ID
+};
+
 class Picker extends React.Component<PickerProps, PickerState> {
   static defaultProps = {
-    clientId: "",
-    redirectUri: "",
-    onSelect: () => {},
-    onClose: () => {},
     fileUrl: "",
-    onSuccess: () => {},
-    onError: () => {}
+    client: {},
+    onPick: () => {},
+    onModalClose: () => {}
   };
 
   constructor(props: PickerProps) {
@@ -78,9 +55,6 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
     this.state = initialState;
 
-    (this: any)._client = null;
-    (this: any)._receiveToken = this._receiveToken.bind(this);
-    (this: any)._getToken = this._getToken.bind(this);
     (this: any)._onFolderDoubleClick = this._onFolderDoubleClick.bind(this);
     (this: any)._onItemClick = this._onItemClick.bind(this);
     (this: any)._onItemDoubleClick = this._onItemDoubleClick.bind(this);
@@ -89,35 +63,10 @@ class Picker extends React.Component<PickerProps, PickerState> {
     (this: any)._onNavigationClick = this._onNavigationClick.bind(this);
   }
 
-  _getToken() {
-    const { clientId, redirectUri } = this.props;
-    const { isAuthenticated } = this.state;
-
-    if (!isAuthenticated) {
-      pcloudSdk.oauth.initOauthToken({
-        client_id: clientId,
-        redirect_uri: redirectUri,
-        receiveToken: this._receiveToken
-      });
-    }
-
-    this.setState({ isModalOpen: true });
-  }
-
-  _receiveToken(token: string) {
-    (this: any)._client = this._getClient(token);
-
-    this._setItems();
-    this.setState({ isAuthenticated: true });
-  }
-
-  _getClient(token: string) {
-    // handle errors
-    return pcloudSdk.createClient(token);
-  }
-
   _fetchItems(folderId: number) {
-    return (this: any)._client
+    const { client } = this.props;
+
+    return client
       .listfolder(folderId, { iconformat: "id" })
       .then(res => res.contents)
       .then(items => items.map(parseItem))
@@ -127,15 +76,13 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   _uploadFile() {
-    const { fileUrl } = this.props;
+    const { client, fileUrl } = this.props;
     const { selectedItemId } = this.state;
 
-    (this: any)._client
+    client
       .remoteupload(fileUrl, selectedItemId)
       .then(data => {
-        if (data !== null) {
-          this.setState(resetState);
-        }
+        console.log(data);
       })
       .catch(err => console.log(err));
   }
@@ -241,19 +188,19 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   _onCloseButtonClick() {
-    const { onClose } = this.props;
+    const { onClose, onModalClose } = this.props;
 
     onClose();
-
-    this.setState(resetState);
+    onModalClose();
   }
 
   _onChooseButtonClick() {
-    const { mode, onSelect } = this.props;
+    const { mode, onSelect, onPick } = this.props;
+
+    onPick();
 
     if (mode === "select") {
       onSelect(this._getSelectedItem());
-      this.setState(resetState);
     }
 
     if (mode === "upload") {
@@ -269,9 +216,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   componentWillMount() {
-    const modal = document.createElement("div");
-    modal.setAttribute("id", MODAL_CLASS);
-    BODY.appendChild(modal);
+    this._setItems();
   }
 
   componentDidUpdate(
@@ -283,11 +228,6 @@ class Picker extends React.Component<PickerProps, PickerState> {
     if (folders !== prevFolders) {
       this._setItems();
     }
-  }
-
-  componentWillUnmount() {
-    const elModal = document.getElementById(MODAL_CLASS);
-    BODY.removeChild(elModal);
   }
 
   _renderHeader() {
@@ -340,32 +280,11 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   render() {
-    const { isModalOpen } = this.state;
-    const { buttonText } = this.props;
-    const elModal = document.getElementById(MODAL_CLASS);
-
-    return (
-      <Wrapper>
-        <Modal
-          container={elModal}
-          show={isModalOpen}
-          onCloseModal={this._onCloseButtonClick}
-        >
-          {this._renderHeader()}
-          {this._renderItems()}
-          {this._renderFooter()}
-        </Modal>
-        <DefaultButton onClick={this._getToken}>{buttonText}</DefaultButton>
-      </Wrapper>
-    );
+    return [this._renderHeader(), this._renderItems(), this._renderFooter()];
   }
 }
 
 export default Picker;
-
-const Wrapper = styled.div`
-  font: 11px/34px Arial, Helvetica;
-`;
 
 const Header = styled.header`
   border: 1px solid #e9e9e9;
@@ -432,11 +351,6 @@ const DefaultButton = styled.div`
 `;
 
 const ChooseButton = DefaultButton.extend`
-  background: ${props => (props.isDisabled ? "#eaeaea" : "#20bed6")};
-  color: ${props => (props.isDisabled ? "#999" : "#fff")};
-  &:hover {
-    cursor: ${props => (props.isDisabled ? "not-allowed" : "pointer")};
-  }
   width: 50px;
 `;
 const CancelButton = DefaultButton.extend`

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { Picker } from "./components";
+import { App } from "./components";
 import registerServiceWorker from "./registerServiceWorker";
 
 registerServiceWorker();
@@ -40,7 +40,7 @@ const PcloudPicker = {
     } = options;
 
     return ReactDOM.render(
-      <Picker
+      <App
         mode={"select"}
         clientId={clientId}
         redirectUri={redirectUri}
@@ -65,7 +65,7 @@ const PcloudPicker = {
     } = options;
 
     return ReactDOM.render(
-      <Picker
+      <App
         mode={"upload"}
         clientId={clientId}
         redirectUri={redirectUri}
