@@ -9,15 +9,13 @@ import type { selectedItemType } from "../utils";
 import { ROOT_FOLDER_ID, ROOT_FOLDER_NAME } from "../config/constants";
 
 type PickerProps = {
-  mode: string,
   client: any,
   buttonText: string,
-  fileUrl: string,
-  onPick: () => void,
+  isFileDisabled: boolean,
+  onPick: any => void,
   onModalClose: () => void,
-  onSelect: any => void,
   onError: any => void,
-  onClose: () => void
+  onClose: any => void
 };
 
 type folder = {
@@ -44,10 +42,13 @@ const initialState = {
 
 class Picker extends React.Component<PickerProps, PickerState> {
   static defaultProps = {
-    fileUrl: "",
     client: {},
+    buttonText: "",
+    isFileDisabled: false,
     onPick: () => {},
-    onModalClose: () => {}
+    onModalClose: () => {},
+    onError: () => {},
+    onClose: () => {}
   };
 
   constructor(props: PickerProps) {
@@ -73,18 +74,6 @@ class Picker extends React.Component<PickerProps, PickerState> {
       .catch(err => {
         console.log(err);
       });
-  }
-
-  _uploadFile() {
-    const { client, fileUrl } = this.props;
-    const { selectedItemId } = this.state;
-
-    client
-      .remoteupload(fileUrl, selectedItemId)
-      .then(data => {
-        console.log(data);
-      })
-      .catch(err => console.log(err));
   }
 
   _getCurrentFolderId(): string {
@@ -160,21 +149,21 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   _onFileDoubleClick() {
-    const { mode } = this.props;
+    const { isFileDisabled } = this.props;
 
-    if (mode === "select") {
+    // if (mode === MODE_SELECT && !isFileDisabled) {
+    //   this._onChooseButtonClick();
+    // }
+
+    if (!isFileDisabled) {
       this._onChooseButtonClick();
     }
   }
 
   _onItemClick(id: string, isFolder: boolean) {
-    const { mode } = this.props;
+    const { isFileDisabled } = this.props;
 
-    if (mode === "upload" && isFolder) {
-      this._selectItem(id);
-    }
-
-    if (mode === "select") {
+    if (isFolder || !isFileDisabled) {
       this._selectItem(id);
     }
   }
@@ -195,17 +184,9 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   _onChooseButtonClick() {
-    const { mode, onSelect, onPick } = this.props;
+    const { onPick } = this.props;
 
-    onPick();
-
-    if (mode === "select") {
-      onSelect(this._getSelectedItem());
-    }
-
-    if (mode === "upload") {
-      this._uploadFile();
-    }
+    onPick(this._getSelectedItem());
   }
 
   _onNavigationClick(folderId: string) {
@@ -234,7 +215,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
     const { path, folders } = this.state;
 
     return (
-      <Header>
+      <Header key="header">
         <Navigation
           path={path}
           folders={folders}
@@ -246,18 +227,17 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
   _renderItems() {
     const { folders, selectedItemId } = this.state;
-    const { mode } = this.props;
-    const isItemDisabled = mode === "upload";
+    const { isFileDisabled } = this.props;
     const currentFolderId = this._getCurrentFolderId();
     const currentItems = folders.getIn([currentFolderId, "items"], null);
 
     return (
-      <Section>
+      <Section key="section">
         {currentItems === null ? (
           <Loader />
         ) : (
           <ItemsList
-            isItemDisabled={isItemDisabled}
+            isItemDisabled={isFileDisabled}
             selectedItemId={selectedItemId}
             items={currentItems}
             onItemClick={this._onItemClick}
@@ -270,7 +250,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
   _renderFooter() {
     return (
-      <Footer>
+      <Footer key="footer">
         <CancelButton onClick={this._onCloseButtonClick}>Cancel</CancelButton>
         <ChooseButton isDisabled={false} onClick={this._onChooseButtonClick}>
           Choose

@@ -7,7 +7,7 @@ PcloudPicker.getSelectedItem({
   clientId: CLIENT_ID,
   redirectUri: REDIRECT_URI,
   container: document.getElementById("pcloud-select"),
-  disableFileSelection: true,
+  isFileDisabled: true,
   onSelect: item => {
     console.log(item);
   },

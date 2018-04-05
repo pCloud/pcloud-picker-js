@@ -8,6 +8,7 @@ ShallowWrapper {
     iconId={0}
     id="0"
     isFolder={false}
+    isItemDisabled={false}
     isSelected={false}
     name=""
     onItemClick={[Function]}
@@ -38,6 +39,7 @@ ShallowWrapper {
           
         </Item__ItemName>,
       ],
+      "isDisabled": false,
       "isSelected": false,
       "onClick": [Function],
       "onDoubleClick": [Function],
@@ -91,6 +93,7 @@ ShallowWrapper {
             
           </Item__ItemName>,
         ],
+        "isDisabled": false,
         "isSelected": false,
         "onClick": [Function],
         "onDoubleClick": [Function],

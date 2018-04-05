@@ -23,7 +23,7 @@ ShallowWrapper {
     "nodeType": "class",
     "props": Object {
       "children": Array [
-        null,
+        false,
         <NavigationFolder__FolderName
           onClick={[Function]}
         >
@@ -33,7 +33,7 @@ ShallowWrapper {
     },
     "ref": null,
     "rendered": Array [
-      null,
+      false,
       Object {
         "instance": null,
         "key": undefined,
@@ -56,7 +56,7 @@ ShallowWrapper {
       "nodeType": "class",
       "props": Object {
         "children": Array [
-          null,
+          false,
           <NavigationFolder__FolderName
             onClick={[Function]}
           >
@@ -66,7 +66,7 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
-        null,
+        false,
         Object {
           "instance": null,
           "key": undefined,

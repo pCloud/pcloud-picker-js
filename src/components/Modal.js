@@ -7,12 +7,12 @@ import { createPortal } from "react-dom";
 type ModalProps = {
   show: boolean,
   children: React.Node,
-  onCloseModal: () => void
+  onModalClose: () => void
 };
 
 class Modal extends React.Component<ModalProps, {}> {
   _renderModal() {
-    const { children, show, onCloseModal } = this.props;
+    const { children, show, onModalClose } = this.props;
 
     if (!show) {
       return null;
@@ -21,7 +21,7 @@ class Modal extends React.Component<ModalProps, {}> {
     return (
       <ModalWrapper>
         <ModalContent>{children}</ModalContent>
-        <ModalOverlay onClick={onCloseModal} />
+        <ModalOverlay onClick={onModalClose} />
       </ModalWrapper>
     );
   }

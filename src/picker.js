@@ -11,7 +11,7 @@ type SelectItemOptions = {
   clientId: string,
   redirectUri: string,
   container: HTMLElement,
-  disableFileSelection: boolean,
+  isFileDisabled: boolean,
   onSelect: any => void,
   onClose: () => void
 };
@@ -21,6 +21,7 @@ type UploadFileOptions = {
   redirectUri: string,
   container: HTMLElement,
   fileUrl: string,
+  isFileDisabled: boolean,
   onSuccess: () => void,
   onSelect: any => void,
   onError: any => void,
@@ -34,7 +35,7 @@ const PcloudPicker = {
       clientId,
       redirectUri,
       container,
-      disableFileSelection,
+      isFileDisabled,
       onSelect,
       onClose
     } = options;
@@ -45,7 +46,7 @@ const PcloudPicker = {
         clientId={clientId}
         redirectUri={redirectUri}
         buttonText={"Select pCloud"}
-        disableFileSelection={disableFileSelection}
+        isFileDisabled={isFileDisabled}
         onSelect={onSelect}
         onClose={onClose}
       />,
@@ -71,6 +72,7 @@ const PcloudPicker = {
         redirectUri={redirectUri}
         buttonText={"Upload pCloud"}
         fileUrl={fileUrl}
+        isFileDisabled={true}
         onSuccess={onSuccess}
         onError={onError}
         onClose={onClose}

@@ -5,9 +5,9 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <Navigation
-    folders={Object {}}
+    folders={Immutable.Map {}}
     onNameClick={[Function]}
-    path={Array []}
+    path={Immutable.List []}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -21,7 +21,7 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "class",
     "props": Object {
-      "children": Array [],
+      "children": Immutable.List [],
     },
     "ref": null,
     "rendered": Array [],
@@ -33,7 +33,7 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "children": Array [],
+        "children": Immutable.List [],
       },
       "ref": null,
       "rendered": Array [],
