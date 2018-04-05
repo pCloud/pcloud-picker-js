@@ -4,13 +4,9 @@ import * as React from "react";
 import pcloudSdk from "pcloud-sdk-js";
 import styled from "styled-components";
 import { Picker, Modal } from ".";
+import { parseItem } from "../utils";
 import type { selectedItemType } from "../utils";
 import { MODE_SELECT, MODE_UPLOAD } from "../config/constants";
-
-const MODAL_CLASS = "pcloud-modal";
-const MODAL_EL = document.createElement("div");
-MODAL_EL.setAttribute("id", MODAL_CLASS);
-const BODY = global.document.querySelector("body");
 
 type AppProps = {
   mode: MODE_SELECT | MODE_UPLOAD,
@@ -18,16 +14,14 @@ type AppProps = {
   redirectUri: string,
   buttonText: string,
   fileUrl: string,
-  isFileDisabled: boolean,
+  isFolderSelectionOnly: boolean,
   onSelect: any => void,
-  onClose: any => void,
-  onSuccess: any => void,
-  onError: any => void
+  onClose: any => void
 };
 
 type AppState = {
   isAuthenticated: boolean,
-  isModalOpenned: boolean
+  isModalOpened: boolean
 };
 
 class App extends React.Component<AppProps, AppState> {
@@ -37,11 +31,9 @@ class App extends React.Component<AppProps, AppState> {
     redirectUri: "",
     buttonText: "PcloudButton",
     fileUrl: "",
-    isFileDisabled: false,
+    isFolderSelectionOnly: false,
     onSelect: () => {},
-    onClose: () => {},
-    onSuccess: () => {},
-    onError: () => {}
+    onClose: () => {}
   };
 
   constructor(props: AppProps) {
@@ -49,14 +41,34 @@ class App extends React.Component<AppProps, AppState> {
 
     this.state = {
       isAuthenticated: false,
-      isModalOpenned: false
+      isModalOpened: false
     };
 
     (this: any)._client = null;
     (this: any)._receiveToken = this._receiveToken.bind(this);
     (this: any)._getToken = this._getToken.bind(this);
-    (this: any)._onModalClose = this._onModalClose.bind(this);
+    (this: any)._getFolderContent = this._getFolderContent.bind(this);
     (this: any)._onPick = this._onPick.bind(this);
+    (this: any)._onCancel = this._onCancel.bind(this);
+  }
+
+  _openModal() {
+    this.setState({ isModalOpened: true });
+  }
+
+  _closeModal() {
+    this.setState({ isModalOpened: false });
+  }
+
+  _getClient(token: string) {
+    // handle errors
+    return pcloudSdk.createClient(token);
+  }
+
+  _receiveToken(token: string) {
+    (this: any)._client = this._getClient(token);
+
+    this.setState({ isAuthenticated: true, isModalOpened: true });
   }
 
   _getToken() {
@@ -71,18 +83,17 @@ class App extends React.Component<AppProps, AppState> {
       });
     }
 
-    this.setState({ isModalOpenned: true });
+    this._openModal();
   }
 
-  _receiveToken(token: string) {
-    (this: any)._client = this._getClient(token);
-
-    this.setState({ isAuthenticated: true, isModalOpenned: true });
-  }
-
-  _getClient(token: string) {
-    // handle errors
-    return pcloudSdk.createClient(token);
+  _getFolderContent(folderId: number) {
+    return (this: any)._client
+      .listfolder(folderId, { iconformat: "id" })
+      .then(res => res.contents)
+      .then(items => items.map(parseItem))
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   _uploadFile(selectedItemId: string) {
@@ -100,51 +111,40 @@ class App extends React.Component<AppProps, AppState> {
     const { mode, onSelect } = this.props;
     const { id } = selectedItem;
 
-    this.setState({ isModalOpenned: false });
+    this._closeModal();
 
-    if (mode === MODE_SELECT) {
-      onSelect(selectedItem);
+    switch (mode) {
+      case MODE_SELECT:
+        return onSelect(selectedItem);
+
+      case MODE_UPLOAD:
+        return this._uploadFile(id);
+
+      default:
+        return null;
     }
-
-    if (mode === MODE_UPLOAD) {
-      this._uploadFile(id);
-    }
   }
 
-  _onModalClose() {
-    this.setState({ isModalOpenned: false });
-  }
+  _onCancel() {
+    const { onClose } = this.props;
 
-  componentWillMount() {
-    BODY.appendChild(MODAL_EL);
-  }
-
-  componentWillUnmount() {
-    BODY.removeChild(MODAL_EL);
+    onClose();
+    this._closeModal();
   }
 
   render() {
-    const { isAuthenticated, isModalOpenned } = this.state;
-    const { mode, buttonText, isFileDisabled } = this.props;
-    const { onClose, onSuccess, onError } = this.props;
+    const { isAuthenticated, isModalOpened } = this.state;
+    const { buttonText, isFolderSelectionOnly } = this.props;
 
     return (
       <Wrapper>
-        <Modal
-          container={MODAL_EL}
-          show={isModalOpenned}
-          onModalClose={this._onModalClose}
-        >
+        <Modal show={isModalOpened} closeModal={this._closeModal}>
           {isAuthenticated ? (
             <Picker
-              mode={mode}
-              client={(this: any)._client}
-              isFileDisabled={isFileDisabled}
+              isFolderSelectionOnly={isFolderSelectionOnly}
+              getFolderContent={this._getFolderContent}
               onPick={this._onPick}
-              onClose={onClose}
-              onSuccess={onSuccess}
-              onError={onError}
-              onModalClose={this._onModalClose}
+              onCancel={this._onCancel}
             />
           ) : null}
         </Modal>

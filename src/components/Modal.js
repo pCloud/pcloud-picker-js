@@ -4,15 +4,28 @@ import * as React from "react";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 
+const MODAL_CLASS = "pcloud-modal";
+const MODAL_EL = document.createElement("div");
+MODAL_EL.setAttribute("id", MODAL_CLASS);
+const BODY = global.document.querySelector("body");
+
 type ModalProps = {
   show: boolean,
   children: React.Node,
-  onModalClose: () => void
+  closeModal: () => void
 };
 
 class Modal extends React.Component<ModalProps, {}> {
+  componentWillMount() {
+    BODY.appendChild(MODAL_EL);
+  }
+
+  componentWillUnmount() {
+    BODY.removeChild(MODAL_EL);
+  }
+
   _renderModal() {
-    const { children, show, onModalClose } = this.props;
+    const { children, show, closeModal } = this.props;
 
     if (!show) {
       return null;
@@ -21,15 +34,13 @@ class Modal extends React.Component<ModalProps, {}> {
     return (
       <ModalWrapper>
         <ModalContent>{children}</ModalContent>
-        <ModalOverlay onClick={onModalClose} />
+        <ModalOverlay onClick={closeModal} />
       </ModalWrapper>
     );
   }
 
   render() {
-    const { container } = this.props;
-
-    return createPortal(this._renderModal(), container);
+    return createPortal(this._renderModal(), MODAL_EL);
   }
 }
 

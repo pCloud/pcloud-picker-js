@@ -9,7 +9,7 @@ type ItemProps = {
   id: string,
   iconId: number,
   name: string,
-  isItemDisabled: boolean,
+  isFolderSelectionOnly: boolean,
   isFolder: boolean,
   isSelected: boolean,
   onItemClick: (id: string, isFolder: boolean) => void,
@@ -21,7 +21,7 @@ class Item extends React.Component<ItemProps, {}> {
     id: "0",
     iconId: 0,
     name: "",
-    isItemDisabled: false,
+    isFolderSelectionOnly: false,
     isFolder: false,
     isSelected: false,
     onItemClick: () => {},
@@ -48,13 +48,19 @@ class Item extends React.Component<ItemProps, {}> {
   }
 
   render() {
-    const { name, iconId, isItemDisabled, isSelected, isFolder } = this.props;
-    const isFileDisabled = isItemDisabled && !isFolder;
-    const itemIcon = isFileDisabled ? 0 : iconId;
+    const {
+      name,
+      iconId,
+      isFolderSelectionOnly,
+      isSelected,
+      isFolder
+    } = this.props;
+    const isSelectionDisabled = isFolderSelectionOnly && !isFolder;
+    const itemIcon = isSelectionDisabled ? 0 : iconId;
 
     return (
       <Row
-        isDisabled={isFileDisabled}
+        isSelectionDisabled={isSelectionDisabled}
         isSelected={isSelected}
         onClick={this._onClick}
         onDoubleClick={this._onDoubleClick}

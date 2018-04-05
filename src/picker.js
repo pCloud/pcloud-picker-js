@@ -11,7 +11,7 @@ type SelectItemOptions = {
   clientId: string,
   redirectUri: string,
   container: HTMLElement,
-  isFileDisabled: boolean,
+  isFolderSelectionOnly: boolean,
   onSelect: any => void,
   onClose: () => void
 };
@@ -21,10 +21,7 @@ type UploadFileOptions = {
   redirectUri: string,
   container: HTMLElement,
   fileUrl: string,
-  isFileDisabled: boolean,
-  onSuccess: () => void,
-  onSelect: any => void,
-  onError: any => void,
+  isFolderSelectionOnly: boolean,
   onClose: () => void
 };
 
@@ -35,7 +32,7 @@ const PcloudPicker = {
       clientId,
       redirectUri,
       container,
-      isFileDisabled,
+      isFolderSelectionOnly,
       onSelect,
       onClose
     } = options;
@@ -46,7 +43,7 @@ const PcloudPicker = {
         clientId={clientId}
         redirectUri={redirectUri}
         buttonText={"Select pCloud"}
-        isFileDisabled={isFileDisabled}
+        isFolderSelectionOnly={isFolderSelectionOnly}
         onSelect={onSelect}
         onClose={onClose}
       />,
@@ -55,15 +52,7 @@ const PcloudPicker = {
   },
   // upload file to pCloud folder
   uplodToFolder(options: UploadFileOptions) {
-    const {
-      clientId,
-      redirectUri,
-      container,
-      fileUrl,
-      onSuccess,
-      onError,
-      onClose
-    } = options;
+    const { clientId, redirectUri, container, fileUrl, onClose } = options;
 
     return ReactDOM.render(
       <App
@@ -72,9 +61,7 @@ const PcloudPicker = {
         redirectUri={redirectUri}
         buttonText={"Upload pCloud"}
         fileUrl={fileUrl}
-        isFileDisabled={true}
-        onSuccess={onSuccess}
-        onError={onError}
+        isFolderSelectionOnly={true}
         onClose={onClose}
       />,
       container
