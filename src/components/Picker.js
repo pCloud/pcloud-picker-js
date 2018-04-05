@@ -151,10 +151,6 @@ class Picker extends React.Component<PickerProps, PickerState> {
   _onFileDoubleClick() {
     const { isFileDisabled } = this.props;
 
-    // if (mode === MODE_SELECT && !isFileDisabled) {
-    //   this._onChooseButtonClick();
-    // }
-
     if (!isFileDisabled) {
       this._onChooseButtonClick();
     }
