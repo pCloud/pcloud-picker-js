@@ -23,10 +23,10 @@ class NavigationFolder extends React.Component<NavigationFolderProps, {}> {
   constructor(props: NavigationFolderProps) {
     super(props);
 
-    (this: any)._onClick = this._onClick.bind(this);
+    (this: any).onClick = this.onClick.bind(this);
   }
 
-  _onClick() {
+  onClick() {
     const { id, onNameClick } = this.props;
 
     onNameClick(id);
@@ -38,7 +38,7 @@ class NavigationFolder extends React.Component<NavigationFolderProps, {}> {
     return (
       <Wrapper>
         {shouldRenderIcon && <img src={ArrowIcon} alt="arrow-icon" />}
-        <FolderName onClick={this._onClick}>{name}</FolderName>
+        <FolderName onClick={this.onClick}>{name}</FolderName>
       </Wrapper>
     );
   }

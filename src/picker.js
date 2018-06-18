@@ -9,7 +9,6 @@ registerServiceWorker();
 
 type SelectItemOptions = {
   clientId: string,
-  redirectUri: string,
   container: HTMLElement,
   isFolderSelectionOnly: boolean,
   onSelect: any => void,
@@ -18,7 +17,6 @@ type SelectItemOptions = {
 
 type UploadFileOptions = {
   clientId: string,
-  redirectUri: string,
   container: HTMLElement,
   fileUrl: string,
   isFolderSelectionOnly: boolean,
@@ -30,7 +28,6 @@ const PcloudPicker = {
   getSelectedItem(options: SelectItemOptions) {
     const {
       clientId,
-      redirectUri,
       container,
       isFolderSelectionOnly,
       onSelect,
@@ -41,7 +38,6 @@ const PcloudPicker = {
       <App
         mode={"select"}
         clientId={clientId}
-        redirectUri={redirectUri}
         buttonText={"Select pCloud"}
         isFolderSelectionOnly={isFolderSelectionOnly}
         onSelect={onSelect}
@@ -52,13 +48,12 @@ const PcloudPicker = {
   },
   // upload file to pCloud folder
   uplodToFolder(options: UploadFileOptions) {
-    const { clientId, redirectUri, container, fileUrl, onClose } = options;
+    const { clientId, container, fileUrl, onClose } = options;
 
     return ReactDOM.render(
       <App
         mode={"upload"}
         clientId={clientId}
-        redirectUri={redirectUri}
         buttonText={"Upload pCloud"}
         fileUrl={fileUrl}
         isFolderSelectionOnly={true}

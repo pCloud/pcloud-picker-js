@@ -24,7 +24,7 @@ class Modal extends React.Component<ModalProps, {}> {
     BODY.removeChild(MODAL_EL);
   }
 
-  _renderModal() {
+  renderModal() {
     const { children, show, closeModal } = this.props;
 
     if (!show) {
@@ -40,7 +40,7 @@ class Modal extends React.Component<ModalProps, {}> {
   }
 
   render() {
-    return createPortal(this._renderModal(), MODAL_EL);
+    return createPortal(this.renderModal(), MODAL_EL);
   }
 }
 

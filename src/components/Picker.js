@@ -50,25 +50,25 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
     this.state = initialState;
 
-    (this: any)._onFolderDoubleClick = this._onFolderDoubleClick.bind(this);
-    (this: any)._onItemClick = this._onItemClick.bind(this);
-    (this: any)._onItemDoubleClick = this._onItemDoubleClick.bind(this);
-    (this: any)._onChooseButtonClick = this._onChooseButtonClick.bind(this);
-    (this: any)._onCancelButtonClick = this._onCancelButtonClick.bind(this);
-    (this: any)._onNavigationClick = this._onNavigationClick.bind(this);
+    (this: any).onFolderDoubleClick = this.onFolderDoubleClick.bind(this);
+    (this: any).onItemClick = this.onItemClick.bind(this);
+    (this: any).onItemDoubleClick = this.onItemDoubleClick.bind(this);
+    (this: any).onChooseButtonClick = this.onChooseButtonClick.bind(this);
+    (this: any).onCancelButtonClick = this.onCancelButtonClick.bind(this);
+    (this: any).onNavigationClick = this.onNavigationClick.bind(this);
   }
 
-  _getCurrentFolderId(): string {
+  getCurrentFolderId(): string {
     const { path } = this.state;
 
     return path.last() || ROOT_FOLDER_ID;
   }
 
-  _getSelectedItem(): selectedItemType | null {
+  getSelectedItem(): selectedItemType | null {
     const { selectedItemId, folders } = this.state;
-    const items = folders.getIn([this._getCurrentFolderId(), "items"], null);
+    const items = folders.getIn([this.getCurrentFolderId(), "items"], null);
 
-    if (selectedItemId === this._getCurrentFolderId()) {
+    if (selectedItemId === this.getCurrentFolderId()) {
       return {
         id: selectedItemId,
         isFolder: true,
@@ -81,10 +81,10 @@ class Picker extends React.Component<PickerProps, PickerState> {
     return null;
   }
 
-  _fetchCurrentFolderItems() {
+  fetchCurrentFolderItems() {
     const { folders } = this.state;
     const { getFolderContent } = this.props;
-    const currentFolderId = this._getCurrentFolderId();
+    const currentFolderId = this.getCurrentFolderId();
     const currentItems = folders.getIn([currentFolderId, "items"], null);
 
     if (currentItems === null) {
@@ -96,14 +96,14 @@ class Picker extends React.Component<PickerProps, PickerState> {
     }
   }
 
-  _getPathTo(folderId: string) {
+  getPathTo(folderId: string) {
     const { path } = this.state;
     const indexOfCurrentId = path.indexOf(folderId);
 
     return path.slice(0, indexOfCurrentId + 1);
   }
 
-  _selectItem(id: string) {
+  selectItem(id: string) {
     const { selectedItemId } = this.state;
 
     if (id !== selectedItemId) {
@@ -111,7 +111,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
     }
   }
 
-  _onFolderDoubleClick(folderId: string, name: string) {
+  onFolderDoubleClick(folderId: string, name: string) {
     const { path, folders } = this.state;
 
     if (!folders.has(folderId)) {
@@ -131,51 +131,51 @@ class Picker extends React.Component<PickerProps, PickerState> {
     }
   }
 
-  _onFileDoubleClick() {
+  onFileDoubleClick() {
     const { isFolderSelectionOnly } = this.props;
 
     if (!isFolderSelectionOnly) {
-      this._onChooseButtonClick();
+      this.onChooseButtonClick();
     }
   }
 
-  _onItemClick(id: string, isFolder: boolean) {
+  onItemClick(id: string, isFolder: boolean) {
     const { isFolderSelectionOnly } = this.props;
 
     if (isFolder || !isFolderSelectionOnly) {
-      this._selectItem(id);
+      this.selectItem(id);
     }
   }
 
-  _onItemDoubleClick(isFolder: boolean, id: string, name: string) {
+  onItemDoubleClick(isFolder: boolean, id: string, name: string) {
     if (isFolder) {
-      this._onFolderDoubleClick(id, name);
+      this.onFolderDoubleClick(id, name);
     } else {
-      this._onFileDoubleClick();
+      this.onFileDoubleClick();
     }
   }
 
-  _onCancelButtonClick() {
+  onCancelButtonClick() {
     const { onCancel } = this.props;
 
     onCancel();
   }
 
-  _onChooseButtonClick() {
+  onChooseButtonClick() {
     const { onPick } = this.props;
 
-    onPick(this._getSelectedItem());
+    onPick(this.getSelectedItem());
   }
 
-  _onNavigationClick(folderId: string) {
+  onNavigationClick(folderId: string) {
     this.setState({
-      path: this._getPathTo(folderId),
+      path: this.getPathTo(folderId),
       selectedItemId: folderId
     });
   }
 
   componentDidMount() {
-    this._fetchCurrentFolderItems();
+    this.fetchCurrentFolderItems();
   }
 
   componentDidUpdate(
@@ -185,11 +185,11 @@ class Picker extends React.Component<PickerProps, PickerState> {
     const { folders } = this.state;
 
     if (folders !== prevFolders) {
-      this._fetchCurrentFolderItems();
+      this.fetchCurrentFolderItems();
     }
   }
 
-  _renderHeader() {
+  renderHeader() {
     const { path, folders } = this.state;
 
     return (
@@ -197,16 +197,16 @@ class Picker extends React.Component<PickerProps, PickerState> {
         <Navigation
           path={path}
           folders={folders}
-          onNameClick={this._onNavigationClick}
+          onNameClick={this.onNavigationClick}
         />
       </Header>
     );
   }
 
-  _renderItems() {
+  renderItems() {
     const { folders, selectedItemId } = this.state;
     const { isFolderSelectionOnly } = this.props;
-    const currentFolderId = this._getCurrentFolderId();
+    const currentFolderId = this.getCurrentFolderId();
     const currentItems = folders.getIn([currentFolderId, "items"], null);
 
     return (
@@ -218,19 +218,19 @@ class Picker extends React.Component<PickerProps, PickerState> {
             isFolderSelectionOnly={isFolderSelectionOnly}
             selectedItemId={selectedItemId}
             items={currentItems}
-            onItemClick={this._onItemClick}
-            onItemDoubleClick={this._onItemDoubleClick}
+            onItemClick={this.onItemClick}
+            onItemDoubleClick={this.onItemDoubleClick}
           />
         )}
       </Section>
     );
   }
 
-  _renderFooter() {
+  renderFooter() {
     return (
       <Footer key="footer">
-        <CancelButton onClick={this._onCancelButtonClick}>Cancel</CancelButton>
-        <ChooseButton isDisabled={false} onClick={this._onChooseButtonClick}>
+        <CancelButton onClick={this.onCancelButtonClick}>Cancel</CancelButton>
+        <ChooseButton isDisabled={false} onClick={this.onChooseButtonClick}>
           Choose
         </ChooseButton>
       </Footer>
@@ -238,7 +238,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
   }
 
   render() {
-    return [this._renderHeader(), this._renderItems(), this._renderFooter()];
+    return [this.renderHeader(), this.renderItems(), this.renderFooter()];
   }
 }
 

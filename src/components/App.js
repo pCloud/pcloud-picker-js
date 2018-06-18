@@ -11,7 +11,6 @@ import { MODE_SELECT, MODE_UPLOAD } from "../config/constants";
 type AppProps = {
   mode: MODE_SELECT | MODE_UPLOAD,
   clientId: string,
-  redirectUri: string,
   buttonText: string,
   fileUrl: string,
   isFolderSelectionOnly: boolean,
@@ -28,7 +27,6 @@ class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     mode: "",
     clientId: "",
-    redirectUri: "",
     buttonText: "PcloudButton",
     fileUrl: "",
     isFolderSelectionOnly: false,
@@ -44,50 +42,49 @@ class App extends React.Component<AppProps, AppState> {
       isModalOpened: false
     };
 
-    (this: any)._client = null;
-    (this: any)._receiveToken = this._receiveToken.bind(this);
-    (this: any)._getToken = this._getToken.bind(this);
-    (this: any)._getFolderContent = this._getFolderContent.bind(this);
-    (this: any)._onPick = this._onPick.bind(this);
-    (this: any)._onCancel = this._onCancel.bind(this);
+    (this: any).client = null;
+    (this: any).receiveToken = this.receiveToken.bind(this);
+    (this: any).getToken = this.getToken.bind(this);
+    (this: any).getFolderContent = this.getFolderContent.bind(this);
+    (this: any).onPick = this.onPick.bind(this);
+    (this: any).onCancel = this.onCancel.bind(this);
   }
 
-  _openModal() {
+  openModal() {
     this.setState({ isModalOpened: true });
   }
 
-  _closeModal() {
+  closeModal() {
     this.setState({ isModalOpened: false });
   }
 
-  _getClient(token: string) {
+  getClient(token: string) {
     // handle errors
     return pcloudSdk.createClient(token);
   }
 
-  _receiveToken(token: string) {
-    (this: any)._client = this._getClient(token);
+  receiveToken(token: string) {
+    (this: any).client = this.getClient(token);
 
     this.setState({ isAuthenticated: true, isModalOpened: true });
   }
 
-  _getToken() {
-    const { clientId, redirectUri } = this.props;
+  getToken() {
+    const { clientId } = this.props;
     const { isAuthenticated } = this.state;
 
     if (!isAuthenticated) {
       pcloudSdk.oauth.initOauthToken({
         client_id: clientId,
-        redirect_uri: redirectUri,
-        receiveToken: this._receiveToken
+        receiveToken: this.receiveToken
       });
     }
 
-    this._openModal();
+    this.openModal();
   }
 
-  _getFolderContent(folderId: number) {
-    return (this: any)._client
+  getFolderContent(folderId: number) {
+    return (this: any).client
       .listfolder(folderId, { iconformat: "id" })
       .then(res => res.contents)
       .then(items => items.map(parseItem))
@@ -96,10 +93,10 @@ class App extends React.Component<AppProps, AppState> {
       });
   }
 
-  _uploadFile(selectedItemId: string) {
+  uploadFile(selectedItemId: string) {
     const { fileUrl } = this.props;
 
-    (this: any)._client
+    (this: any).client
       .remoteupload(fileUrl, selectedItemId)
       .then(data => {
         console.log(data);
@@ -107,29 +104,29 @@ class App extends React.Component<AppProps, AppState> {
       .catch(err => console.log(err));
   }
 
-  _onPick(selectedItem: selectedItemType) {
+  onPick(selectedItem: selectedItemType) {
     const { mode, onSelect } = this.props;
     const { id } = selectedItem;
 
-    this._closeModal();
+    this.closeModal();
 
     switch (mode) {
       case MODE_SELECT:
         return onSelect(selectedItem);
 
       case MODE_UPLOAD:
-        return this._uploadFile(id);
+        return this.uploadFile(id);
 
       default:
         return null;
     }
   }
 
-  _onCancel() {
+  onCancel() {
     const { onClose } = this.props;
 
     onClose();
-    this._closeModal();
+    this.closeModal();
   }
 
   render() {
@@ -138,17 +135,17 @@ class App extends React.Component<AppProps, AppState> {
 
     return (
       <Wrapper>
-        <Modal show={isModalOpened} closeModal={this._closeModal}>
+        <Modal show={isModalOpened} closeModal={this.closeModal}>
           {isAuthenticated ? (
             <Picker
               isFolderSelectionOnly={isFolderSelectionOnly}
-              getFolderContent={this._getFolderContent}
-              onPick={this._onPick}
-              onCancel={this._onCancel}
+              getFolderContent={this.getFolderContent}
+              onPick={this.onPick}
+              onCancel={this.onCancel}
             />
           ) : null}
         </Modal>
-        <DefaultButton onClick={this._getToken}>{buttonText}</DefaultButton>
+        <DefaultButton onClick={this.getToken}>{buttonText}</DefaultButton>
       </Wrapper>
     );
   }

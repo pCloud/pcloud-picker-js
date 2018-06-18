@@ -25,10 +25,10 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
   constructor(props: ItemsListProps) {
     super(props);
 
-    (this: any)._renderRow = this._renderRow.bind(this);
+    (this: any).renderRow = this.renderRow.bind(this);
   }
 
-  _renderRow(item: {
+  renderRow(item: {
     id: string,
     iconId: number,
     name: string,
@@ -57,10 +57,10 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
     );
   }
 
-  _renderItems() {
+  renderItems() {
     const { items } = this.props;
 
-    return items.map(this._renderRow);
+    return items.map(this.renderRow);
   }
 
   render() {
@@ -71,7 +71,7 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
         {items.size === 0 ? (
           <EmptyFolder>This folder is emptry.</EmptyFolder>
         ) : (
-          this._renderItems()
+          this.renderItems()
         )}
       </Table>
     );

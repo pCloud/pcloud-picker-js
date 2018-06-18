@@ -31,17 +31,17 @@ class Item extends React.Component<ItemProps, {}> {
   constructor(props: ItemProps) {
     super(props);
 
-    (this: any)._onClick = this._onClick.bind(this);
-    (this: any)._onDoubleClick = this._onDoubleClick.bind(this);
+    (this: any).onClick = this.onClick.bind(this);
+    (this: any).onDoubleClick = this.onDoubleClick.bind(this);
   }
 
-  _onClick() {
+  onClick() {
     const { id, isFolder, onItemClick } = this.props;
 
     onItemClick(id, isFolder);
   }
 
-  _onDoubleClick() {
+  onDoubleClick() {
     const { id, name, isFolder, onItemDoubleClick } = this.props;
 
     onItemDoubleClick(isFolder, id, name);
@@ -62,8 +62,8 @@ class Item extends React.Component<ItemProps, {}> {
       <Row
         isSelectionDisabled={isSelectionDisabled}
         isSelected={isSelected}
-        onClick={this._onClick}
-        onDoubleClick={this._onDoubleClick}
+        onClick={this.onClick}
+        onDoubleClick={this.onDoubleClick}
       >
         <img src={getIcon(itemIcon)} alt="icon" />
         <ItemName>{name}</ItemName>

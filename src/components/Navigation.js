@@ -26,18 +26,18 @@ class Navigation extends React.Component<NavigationProps, {}> {
   constructor(props: NavigationProps) {
     super(props);
 
-    (this: any)._renderFolder = this._renderFolder.bind(this);
+    (this: any).renderFolder = this.renderFolder.bind(this);
   }
 
-  _getFolderName(folderId: string): string {
+  getFolderName(folderId: string): string {
     const { folders } = this.props;
 
     return folders.getIn([folderId, "folderName"], "");
   }
 
-  _renderFolder(onNameClick: () => void) {
+  renderFolder(onNameClick: () => void) {
     return (folderId: string, index: number) => {
-      const folderName = this._getFolderName(folderId);
+      const folderName = this.getFolderName(folderId);
       const shouldRenderIcon = index > 0;
 
       return (
@@ -55,7 +55,7 @@ class Navigation extends React.Component<NavigationProps, {}> {
   render() {
     const { path, onNameClick } = this.props;
 
-    return <Path>{path.map(this._renderFolder(onNameClick))}</Path>;
+    return <Path>{path.map(this.renderFolder(onNameClick))}</Path>;
   }
 }
 
