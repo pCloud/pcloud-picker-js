@@ -37,8 +37,7 @@
   "jest": {
     "clearMocks": true,
     "moduleNameMapper": {
-      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$":
-        "jest-transform-stub"
+      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
     },
     "setupTestFrameworkScriptFile": "./src/tests/enzymeReact.js"
   }
