@@ -96,7 +96,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
     }
   }
 
-  getPathTo(folderId: string) {
+  getPathToFolder(folderId: string) {
     const { path } = this.state;
     const indexOfCurrentId = path.indexOf(folderId);
 
