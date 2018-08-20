@@ -169,7 +169,7 @@ class Picker extends React.Component<PickerProps, PickerState> {
 
   onNavigationClick(folderId: string) {
     this.setState({
-      path: this.getPathTo(folderId),
+      path: this.getPathToFolder(folderId),
       selectedItemId: folderId
     });
   }

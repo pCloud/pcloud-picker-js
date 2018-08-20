@@ -64,7 +64,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   receiveToken(token: string) {
-    this.client = this.getClient(token);
+    (this: any).client = this.getClient(token);
 
     this.setState({ isAuthenticated: true, isModalOpened: true });
   }
@@ -84,7 +84,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   getFolderContent(folderId: number) {
-    return this.client
+    return (this: any).client
       .listfolder(folderId, { iconformat: "id" })
       .then(res => res.contents)
       .then(items => items.map(parseItem))
@@ -96,7 +96,7 @@ class App extends React.Component<AppProps, AppState> {
   uploadFile(selectedItemId: string) {
     const { fileUrl } = this.props;
 
-    this.client
+    (this: any).client
       .remoteupload(fileUrl, selectedItemId)
       .then(data => {
         console.log(data);
