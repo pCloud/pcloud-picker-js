@@ -1,9 +1,11 @@
+:exclamation: Two-Factor Authentication is currently NOT supported
+
 ## Table of Contents
 
-* [NPM package](www)
-* [About pCloud](#about-pcloud)
-* [Install](#install)
-* [Usage](#usage)
+- [NPM package](www)
+- [About pCloud](#about-pcloud)
+- [Install](#install)
+- [Usage](#usage)
 
 ## NPM package
 
