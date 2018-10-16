@@ -3,13 +3,10 @@
 ## Table of Contents
 
 - [NPM package](www)
-- [About pCloud](#about-pcloud)
 - [Install](#install)
 - [Usage](#usage)
 
 ## NPM package
-
-##About pCloud Picker
 
 ## Install
 
