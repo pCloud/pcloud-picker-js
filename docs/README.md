@@ -57,6 +57,7 @@ options = {
 ```
 
 Handling the response
+
 The item parameter in the above onSelect callback function will be an object, containing info about the selected item, whitch includes the following fields:
 
 ```js
