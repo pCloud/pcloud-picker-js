@@ -40,7 +40,7 @@ const initialState = {
 class Picker extends React.Component<PickerProps, PickerState> {
   static defaultProps = {
     isFolderSelectionOnly: false,
-    getFolderContent: () => [],
+    getFolderContent: () => null,
     onPick: () => {},
     onCancel: () => {}
   };

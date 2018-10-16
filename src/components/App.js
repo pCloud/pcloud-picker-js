@@ -48,6 +48,7 @@ class App extends React.Component<AppProps, AppState> {
     (this: any).getFolderContent = this.getFolderContent.bind(this);
     (this: any).onPick = this.onPick.bind(this);
     (this: any).onCancel = this.onCancel.bind(this);
+    (this: any).closeModal = this.closeModal.bind(this);
   }
 
   openModal() {
@@ -74,9 +75,10 @@ class App extends React.Component<AppProps, AppState> {
     const { isAuthenticated } = this.state;
 
     if (!isAuthenticated) {
-      pcloudSdk.oauth.initOauthToken({
+      pcloudSdk.oauth.initOauthPollToken({
         client_id: clientId,
-        receiveToken: this.receiveToken
+        receiveToken: this.receiveToken,
+        onError: err => console.log(err)
       });
     }
 
