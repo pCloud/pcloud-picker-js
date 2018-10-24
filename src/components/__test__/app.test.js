@@ -21,19 +21,31 @@ describe("<App />", () => {
     });
   });
 
-  const modalRoot = global.document.createElement("div");
-  const body = global.document.querySelector("body");
-  modalRoot.setAttribute("id", "modal");
-  body.appendChild(modalRoot);
+  let app;
 
   describe("<DefaultButton />", () => {
+    beforeEach(() => {
+      app = mount(<App {...appProps} />);
+    });
+
+    afterEach(() => {
+      app.unmount();
+    });
+
+    it("renders correct button text", () => {
+      expect(app.props().buttonText).toBe("PcloudButton");
+    });
+
     it("should get user token and open modal", () => {
-      const app = mount(<App {...appProps} />);
       const defaultButton = app.find("App__DefaultButton");
-      app.debug();
-      expect(modalRoot.hasChildNodes()).toBeFalsy();
+
+      expect(app.state("isAuthenticated")).toBeFalsy();
+      expect(app.state("isModalOpened")).toBeFalsy();
+
       defaultButton.simulate("click");
-      expect(modalRoot.hasChildNodes()).toBeDefined();
+
+      expect(app.state("isAuthenticated")).toBeTruthy();
+      expect(app.state("isModalOpened")).toBeTruthy();
     });
   });
 });
