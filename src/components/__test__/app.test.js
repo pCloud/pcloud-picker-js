@@ -4,6 +4,16 @@ import "jest-styled-components";
 
 import { App, Modal } from "..";
 
+const appProps = {
+  mode: "select",
+  clientId: "",
+  buttonText: "PcloudButton",
+  fileUrl: "",
+  isFolderSelectionOnly: false,
+  onSelect: () => {},
+  onClose: () => {}
+};
+
 describe("<App />", () => {
   describe("render", () => {
     it("renders component correctly", () => {
@@ -12,14 +22,15 @@ describe("<App />", () => {
   });
 
   const modalRoot = global.document.createElement("div");
-  modalRoot.setAttribute("id", "modal");
   const body = global.document.querySelector("body");
+  modalRoot.setAttribute("id", "modal");
   body.appendChild(modalRoot);
 
   describe("<DefaultButton />", () => {
     it("should get user token and open modal", () => {
-      const picker = mount(<App />);
-      const defaultButton = picker.find("App__DefaultButton");
+      const app = mount(<App {...appProps} />);
+      const defaultButton = app.find("App__DefaultButton");
+      app.debug();
       expect(modalRoot.hasChildNodes()).toBeFalsy();
       defaultButton.simulate("click");
       expect(modalRoot.hasChildNodes()).toBeDefined();
