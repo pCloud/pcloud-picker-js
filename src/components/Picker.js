@@ -58,6 +58,21 @@ class Picker extends React.Component<PickerProps, PickerState> {
     (this: any).onNavigationClick = this.onNavigationClick.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchCurrentFolderItems();
+  }
+
+  componentDidUpdate(
+    prevProps: PickerProps,
+    { folders: prevFolders }: PickerState
+  ) {
+    const { folders } = this.state;
+
+    if (folders !== prevFolders) {
+      this.fetchCurrentFolderItems();
+    }
+  }
+
   getCurrentFolderId(): string {
     const { path } = this.state;
 
@@ -172,21 +187,6 @@ class Picker extends React.Component<PickerProps, PickerState> {
       path: this.getPathToFolder(folderId),
       selectedItemId: folderId
     });
-  }
-
-  componentDidMount() {
-    this.fetchCurrentFolderItems();
-  }
-
-  componentDidUpdate(
-    prevProps: PickerProps,
-    { folders: prevFolders }: PickerState
-  ) {
-    const { folders } = this.state;
-
-    if (folders !== prevFolders) {
-      this.fetchCurrentFolderItems();
-    }
   }
 
   renderHeader() {

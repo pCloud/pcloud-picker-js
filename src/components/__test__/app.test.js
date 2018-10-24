@@ -2,12 +2,12 @@ import * as React from "react";
 import { shallow, mount } from "enzyme";
 import "jest-styled-components";
 
-import { Picker, Modal } from "../../components";
+import { App, Modal } from "..";
 
-describe("<Picker />", () => {
+describe("<App />", () => {
   describe("render", () => {
     it("renders component correctly", () => {
-      expect(shallow(<Picker />)).toMatchSnapshot();
+      expect(shallow(<App />)).toMatchSnapshot();
     });
   });
 
@@ -18,8 +18,8 @@ describe("<Picker />", () => {
 
   describe("<DefaultButton />", () => {
     it("should get user token and open modal", () => {
-      const picker = mount(<Picker />);
-      const defaultButton = picker.find("Picker__DefaultButton");
+      const picker = mount(<App />);
+      const defaultButton = picker.find("App__DefaultButton");
       expect(modalRoot.hasChildNodes()).toBeFalsy();
       defaultButton.simulate("click");
       expect(modalRoot.hasChildNodes()).toBeDefined();

@@ -196,6 +196,9 @@ export default {
   oauth: {
     initOauthToken: ({ receiveToken }) => {
       return receiveToken(MOCK_TOKEN);
+    },
+    initOauthPollToken: ({ receiveToken }) => {
+      return receiveToken(MOCK_TOKEN);
     }
   }
 };
