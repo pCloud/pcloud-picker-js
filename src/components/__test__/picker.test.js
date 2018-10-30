@@ -443,6 +443,17 @@ describe("<Picker />", () => {
       it("renders <CancelButton /> and <ChooseButton />", () => {
         expect(footer.children().length).toBe(2);
       });
+
+      it("should handle click events", () => {
+        const cancelButton = footer.childAt(0);
+        const chooseButton = footer.childAt(1);
+
+        cancelButton.simulate("click");
+        expect(picker.instance().props.onCancel).toBeCalled;
+
+        chooseButton.simulate("click");
+        expect(picker.instance().props.onPick).toBeCalled;
+      });
     });
   });
 });
