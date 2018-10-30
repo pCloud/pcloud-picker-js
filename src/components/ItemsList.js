@@ -82,7 +82,7 @@ export default ItemsList;
 
 const Table = styled.div`
   width: 100%;
-  font-family: "Arial Narrow", Arial;
+  font-family: Arial;
 `;
 
 export const EmptyFolder = styled.div`

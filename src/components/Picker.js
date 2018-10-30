@@ -40,7 +40,7 @@ const initialState = {
 class Picker extends React.Component<PickerProps, PickerState> {
   static defaultProps = {
     isFolderSelectionOnly: false,
-    getFolderContent: () => null,
+    getFolderContent: () => {},
     onPick: () => {},
     onCancel: () => {}
   };
@@ -103,11 +103,13 @@ class Picker extends React.Component<PickerProps, PickerState> {
     const currentItems = folders.getIn([currentFolderId, "items"], null);
 
     if (currentItems === null) {
-      getFolderContent(+currentFolderId).then(items =>
-        this.setState({
-          folders: folders.setIn([currentFolderId, "items"], List(items))
-        })
-      );
+      getFolderContent(+currentFolderId)
+        .then(items =>
+          this.setState({
+            folders: folders.setIn([currentFolderId, "items"], List(items))
+          })
+        )
+        .catch(err => new Error(err));
     }
   }
 
@@ -230,15 +232,19 @@ class Picker extends React.Component<PickerProps, PickerState> {
     return (
       <Footer key="footer">
         <CancelButton onClick={this.onCancelButtonClick}>Cancel</CancelButton>
-        <ChooseButton isDisabled={false} onClick={this.onChooseButtonClick}>
-          Choose
-        </ChooseButton>
+        <ChooseButton onClick={this.onChooseButtonClick}>Choose</ChooseButton>
       </Footer>
     );
   }
 
   render() {
-    return [this.renderHeader(), this.renderItems(), this.renderFooter()];
+    return (
+      <div>
+        {this.renderHeader()}
+        {this.renderItems()}
+        {this.renderFooter()}
+      </div>
+    );
   }
 }
 

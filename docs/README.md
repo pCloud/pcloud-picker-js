@@ -43,8 +43,8 @@ options = {
   // Required. DOM element where the button will be rendered.
   container: HTMLElement,
 
-  // Optional. A value of false (default) limits selection to files,
-  // while true allows the user to select both folders and files.
+  // Optional. A value of false (default) allows the user to select both folders and files,
+  // while true limits selection of files.
   isFolderSelectionOnly: true | false,
 
   // Required. Called when a user selects an item in the Picker.
