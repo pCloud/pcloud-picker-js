@@ -325,21 +325,30 @@ const getFolderContentMock = jest.fn(() => Promise.resolve(items));
 
 describe("<Picker />", () => {
   let picker;
-  const props = {};
+  const props = {
+    getFolderContent: getFolderContentMock,
+    isFolderSelectionOnly: false,
+    onPick: jest.fn(),
+    onCancel: jest.fn()
+  };
 
   beforeEach(async () => {
-    picker = await shallow(
-      <Picker
-        getFolderContent={getFolderContentMock}
-        isFolderSelectionOnly={false}
-      />
-    );
+    picker = await shallow(<Picker {...props} />);
     picker.update();
   });
 
   describe("render", () => {
     it("renders <Picker /> correctly", () => {
       expect(picker).toMatchSnapshot();
+    });
+
+    it("sets <Picker /> props correctly", () => {
+      expect(picker.instance().props.isFolderSelectionOnly).toEqual(false);
+      expect(picker.instance().props.getFolderContent).toEqual(
+        getFolderContentMock
+      );
+      expect(picker.instance().props.onPick).toBeDefined();
+      expect(picker.instance().props.onCancel).toBeDefined();
     });
 
     describe("componentDidMount", () => {
@@ -387,6 +396,7 @@ describe("<Picker />", () => {
 
     describe("<ItemsList />", () => {
       let section, itemsList;
+
       beforeEach(() => {
         section = picker.find("Picker__Section");
         itemsList = section.children();

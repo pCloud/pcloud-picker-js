@@ -15,8 +15,8 @@ ShallowWrapper {
       }
     }
     isFolderSelectionOnly={false}
-    onCancel={[Function]}
-    onPick={[Function]}
+    onCancel={[MockFunction]}
+    onPick={[MockFunction]}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
