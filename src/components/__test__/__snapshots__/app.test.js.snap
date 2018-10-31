@@ -1,17 +1,143 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<App /> render renders component correctly 1`] = `
+exports[`<App /> render <App /> renders component correctly 1`] = `
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <App
     buttonText="PcloudButton"
-    clientId=""
-    fileUrl=""
+    clientId="lh4j5JDeeCB"
+    fileUrl="https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg"
     isFolderSelectionOnly={false}
-    mode=""
-    onClose={[Function]}
-    onSelect={[Function]}
+    mode="select"
+    onClose={[MockFunction]}
+    onSelect={[MockFunction]}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "children": Array [
+        <Modal
+          closeModal={[Function]}
+          show={false}
+        />,
+        <App__DefaultButton
+          onClick={[Function]}
+        >
+          PcloudButton
+        </App__DefaultButton>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "children": null,
+          "closeModal": [Function],
+          "show": false,
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "children": "PcloudButton",
+          "onClick": [Function],
+        },
+        "ref": null,
+        "rendered": "PcloudButton",
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "children": Array [
+          <Modal
+            closeModal={[Function]}
+            show={false}
+          />,
+          <App__DefaultButton
+            onClick={[Function]}
+          >
+            PcloudButton
+          </App__DefaultButton>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "children": null,
+            "closeModal": [Function],
+            "show": false,
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "children": "PcloudButton",
+            "onClick": [Function],
+          },
+          "ref": null,
+          "rendered": "PcloudButton",
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`<App /> renders component correctly 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <App
+    buttonText="PcloudButton"
+    clientId="lh4j5JDeeCB"
+    fileUrl="https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg"
+    isFolderSelectionOnly={false}
+    mode="select"
+    onClose={[MockFunction]}
+    onSelect={[MockFunction]}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],

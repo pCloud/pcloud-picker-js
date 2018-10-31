@@ -337,12 +337,12 @@ describe("<Picker />", () => {
     picker.update();
   });
 
-  describe("render", () => {
-    it("renders <Picker /> correctly", () => {
+  describe("render <Picker />", () => {
+    it("renders component correctly", () => {
       expect(picker).toMatchSnapshot();
     });
 
-    it("sets <Picker /> props correctly", () => {
+    it("sets component props correctly", () => {
       expect(picker.instance().props.isFolderSelectionOnly).toEqual(false);
       expect(picker.instance().props.getFolderContent).toEqual(
         getFolderContentMock
@@ -372,11 +372,11 @@ describe("<Picker />", () => {
         header = picker.find("Picker__Header");
       });
 
-      it("renders <Header /> corretly", () => {
+      it("renders component correctly", () => {
         expect(header).toBeDefined();
       });
 
-      it("should set <Navigation /> porps correctly", () => {
+      it("sets component porps correctly", () => {
         const navigation = header.children();
 
         expect(is(navigation.prop("path"), mockPath)).toBeTruthy();
@@ -386,11 +386,21 @@ describe("<Picker />", () => {
     });
 
     describe("<Loader />", () => {
-      it("renders picker loader", () => {
-        const picker = shallow(
+      let picker, loader;
+
+      beforeEach(() => {
+        picker = shallow(
           <Picker getFolderContent={jest.fn(() => Promise.resolve(null))} />
         );
-        expect(picker.find("Picker__Loader")).toBeDefined();
+        loader = picker.find("Picker__Loader");
+      });
+
+      it("renders component correctly", () => {
+        expect(loader).toBeDefined();
+      });
+
+      it("does not receive any props", () => {
+        expect(Object.keys(loader.props()).length).toBe(0);
       });
     });
 
@@ -402,11 +412,11 @@ describe("<Picker />", () => {
         itemsList = section.children();
       });
 
-      it("should render <ItemsList /> correctly", () => {
+      it("should render component correctly", () => {
         expect(itemsList).toBeDefined();
       });
 
-      it("should be defined <ItemsList /> porps", () => {
+      it("sets component props correctly", () => {
         const selectedItemIdMock = ROOT_FOLDER_ID;
         const currentFolderIdMock = ROOT_FOLDER_ID;
         const itemsMock = mockFolders.getIn(
@@ -436,7 +446,7 @@ describe("<Picker />", () => {
         footer = picker.find("Picker__Footer");
       });
 
-      it("renders <Footer />", () => {
+      it("renders component correctly", () => {
         expect(footer).toBeDefined();
       });
 
