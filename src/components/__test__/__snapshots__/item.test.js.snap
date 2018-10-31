@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Item /> render renders component correctly 1`] = `
+exports[`<Item /> renders component correctly 1`] = `
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <Item
-    iconId={0}
-    id="0"
-    isFolder={false}
+    iconId={20}
+    id="1931240732"
+    isFolder={true}
     isFolderSelectionOnly={false}
     isSelected={false}
-    name=""
-    onItemClick={[Function]}
-    onItemDoubleClick={[Function]}
+    name="pCloud"
+    onItemClick={[MockFunction]}
+    onItemDoubleClick={[MockFunction]}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -36,7 +36,7 @@ ShallowWrapper {
           }
         />,
         <Item__ItemName>
-          
+          pCloud
         </Item__ItemName>,
       ],
       "isSelected": false,
@@ -65,10 +65,10 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "children": "",
+          "children": "pCloud",
         },
         "ref": null,
-        "rendered": "",
+        "rendered": "pCloud",
         "type": [Function],
       },
     ],
@@ -90,7 +90,7 @@ ShallowWrapper {
             }
           />,
           <Item__ItemName>
-            
+            pCloud
           </Item__ItemName>,
         ],
         "isSelected": false,
@@ -119,10 +119,10 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "children": "",
+            "children": "pCloud",
           },
           "ref": null,
-          "rendered": "",
+          "rendered": "pCloud",
           "type": [Function],
         },
       ],
