@@ -3,10 +3,12 @@
 import * as React from "react";
 import pcloudSdk from "pcloud-sdk-js";
 import styled from "styled-components";
-import { Picker, Modal } from ".";
+
 import { parseItem } from "../utils";
 import type { selectedItemType } from "../utils";
+
 import { MODE_SELECT, MODE_UPLOAD } from "../config/constants";
+import { Picker, Modal } from ".";
 
 type AppProps = {
   mode: MODE_SELECT | MODE_UPLOAD,

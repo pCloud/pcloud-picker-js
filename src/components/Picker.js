@@ -3,10 +3,12 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import { List, Map } from "immutable";
-import { Navigation, ItemsList } from ".";
+
 import { parseSelectedItem } from "../utils";
 import type { selectedItemType } from "../utils";
+
 import { ROOT_FOLDER_ID, ROOT_FOLDER_NAME } from "../config/constants";
+import { Navigation, ItemsList } from ".";
 
 type PickerProps = {
   isFolderSelectionOnly: boolean,

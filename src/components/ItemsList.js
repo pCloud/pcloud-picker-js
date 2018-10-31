@@ -3,7 +3,15 @@
 import * as React from "react";
 import { List } from "immutable";
 import styled from "styled-components";
+
 import { Item } from ".";
+
+type ItemType = {
+  id: string,
+  iconId: number,
+  name: string,
+  isFolder: boolean
+};
 
 type ItemsListProps = {
   isFolderSelectionOnly: boolean,
@@ -17,7 +25,7 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
   static defaultProps = {
     isFolderSelectionOnly: false,
     selectedItemId: "0",
-    items: null,
+    items: List(),
     onItemClick: () => {},
     onItemDoubleClick: () => {}
   };
@@ -28,18 +36,9 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
     (this: any).renderRow = this.renderRow.bind(this);
   }
 
-  renderRow(item: {
-    id: string,
-    iconId: number,
-    name: string,
-    isFolder: boolean
-  }) {
-    const {
-      isFolderSelectionOnly,
-      selectedItemId,
-      onItemClick,
-      onItemDoubleClick
-    } = this.props;
+  renderRow(item: ItemType) {
+    const { isFolderSelectionOnly, selectedItemId } = this.props;
+    const { onItemClick, onItemDoubleClick } = this.props;
     const { id, iconId, name, isFolder } = item;
 
     return (
@@ -50,7 +49,7 @@ class ItemsList extends React.Component<ItemsListProps, {}> {
         name={name}
         isFolderSelectionOnly={isFolderSelectionOnly}
         isFolder={isFolder}
-        isSelected={selectedItemId === id ? true : false}
+        isSelected={selectedItemId === id}
         onItemClick={onItemClick}
         onItemDoubleClick={onItemDoubleClick}
       />
