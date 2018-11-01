@@ -7,6 +7,7 @@ import { Item } from "../../components";
 describe("<Item />", () => {
   const shallowItem = props => shallow(<Item {...props} />);
   let item, props;
+
   beforeEach(() => {
     props = {
       iconId: 20,
