@@ -11,7 +11,6 @@ import {
   getFolderContentMock
 } from "../../../__mocks__/picker";
 
-console.log({ pathMock, foldersMock });
 describe("<Picker />", () => {
   let picker, pickerInstance;
   const props = {

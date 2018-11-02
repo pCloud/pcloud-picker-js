@@ -16,7 +16,7 @@ type ItemProps = {
   onItemDoubleClick: (isFolder: boolean, id: string, name: string) => void
 };
 
-class Item extends React.Component<ItemProps, {}> {
+class Item extends React.PureComponent<ItemProps, {}> {
   static defaultProps = {
     id: "0",
     iconId: 0,

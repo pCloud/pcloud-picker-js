@@ -5,7 +5,6 @@ import "jest-styled-components";
 import { pathMock, foldersMock } from "../../../__mocks__/picker";
 import { Navigation } from "../../components";
 
-console.log({ pathMock, foldersMock });
 describe("<Navigation />", () => {
   const shallowNavigation = props => shallow(<Navigation {...props} />);
   let navigation, props;
@@ -47,16 +46,15 @@ describe("<Navigation />", () => {
     });
 
     it("should render component", () => {
-      console.log(navigationFolder.debug());
       expect(navigationFolder.length).toBe(1);
     });
 
     it("should set component props", () => {
       expect(navigationFolder.prop("id")).toBe("0");
       expect(navigationFolder.prop("name")).toBe("pCloud");
-      expext(navigationFolder.prop("shouldRenderIcon")).toBeFalsy();
+      expect(navigationFolder.prop("shouldRenderIcon")).toBeFalsy();
       expect(navigationFolder.prop("onNameClick")).toEqual(
-        navigation.instance().porps.onNameClick
+        navigation.instance().props.onNameClick
       );
     });
   });

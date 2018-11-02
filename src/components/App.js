@@ -25,7 +25,7 @@ type AppState = {
   isModalOpened: boolean
 };
 
-class App extends React.Component<AppProps, AppState> {
+class App extends React.PureComponent<AppProps, AppState> {
   static defaultProps = {
     mode: "",
     clientId: "",

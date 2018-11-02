@@ -16,7 +16,7 @@ type NavigationProps = {
   onNameClick: () => void
 };
 
-class Navigation extends React.Component<NavigationProps, {}> {
+class Navigation extends React.PureComponent<NavigationProps, {}> {
   static defaultProps = {
     path: List(),
     folders: Map(),

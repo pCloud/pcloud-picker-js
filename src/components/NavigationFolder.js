@@ -12,7 +12,7 @@ type NavigationFolderProps = {
   shouldRenderIcon: boolean
 };
 
-class NavigationFolder extends React.Component<NavigationFolderProps, {}> {
+class NavigationFolder extends React.PureComponent<NavigationFolderProps, {}> {
   static defaultProps = {
     id: ROOT_FOLDER_ID,
     name: ROOT_FOLDER_NAME,

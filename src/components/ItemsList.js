@@ -21,7 +21,7 @@ type ItemsListProps = {
   onItemDoubleClick: () => void
 };
 
-class ItemsList extends React.Component<ItemsListProps, {}> {
+class ItemsList extends React.PureComponent<ItemsListProps, {}> {
   static defaultProps = {
     isFolderSelectionOnly: false,
     selectedItemId: "0",

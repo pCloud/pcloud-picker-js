@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<NavigationFolder /> render renders component correctly 1`] = `
+exports[`<NavigationFolder /> renders component correctly 1`] = `
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <NavigationFolder
     id="0"
     name="pCloud"
-    onNameClick={[Function]}
+    onNameClick={[MockFunction]}
     shouldRenderIcon={false}
   />,
   Symbol(enzyme.__renderer__): Object {

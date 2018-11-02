@@ -15,7 +15,7 @@ type ModalProps = {
   closeModal: () => void
 };
 
-class Modal extends React.Component<ModalProps, {}> {
+class Modal extends React.PureComponent<ModalProps, {}> {
   componentWillMount() {
     BODY.appendChild(MODAL_EL);
   }
