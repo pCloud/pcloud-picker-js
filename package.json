@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "immutable": "^4.0.0-rc.9",
+    "immutable": "^4.0.0-rc.12",
     "pcloud-sdk-js": "^1.4.2",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
     "react-scripts": "1.1.1",
-    "styled-components": "^3.2.3"
+    "styled-components": "^3.4.10"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -18,21 +18,21 @@
     "flow": "flow"
   },
   "devDependencies": {
-    "babel-jest": "^23.0.0-alpha.0",
+    "babel-jest": "^23.6.0",
     "babel-plugin-styled-components": "^1.8.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
     "flow-bin": "^0.68.0",
-    "jest": "^22.4.2",
-    "jest-styled-components": "^5.0.0",
+    "jest": "^22.4.4",
+    "jest-styled-components": "^5.0.1",
     "jest-transform-stub": "^1.0.0",
     "react-addons-test-utils": "^15.6.2",
-    "react-test-renderer": "^16.2.0"
+    "react-test-renderer": "^16.6.0"
   },
   "jest": {
     "clearMocks": true,
