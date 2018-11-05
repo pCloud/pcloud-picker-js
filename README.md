@@ -1,4 +1,17 @@
+## pCloud Javascript Picker Component
+
+The Picker allows developers to add support for selecting files and folders from pCloud in their web applications.
+It's a small JavaScript component library that enables your app to get files and folders from pCloud without having to worry about the complexities of implementing a file browser, authentication, or managing uploads and storage.
+
+Users can select file or folder and via callback the application receives the selected item.
+
+The library provides easy way to upload file from URL to user's folder in pCloud via uploadToFolder method.
+
 :exclamation: Two-Factor Authentication is currently NOT supported
+
+### Browser Support
+ * Chrome, Firefox, Safari, Internet Explorer 11 and Edge
+ * Currently don't support mobile browsers
 
 ## Table of Contents
 
@@ -6,13 +19,13 @@
 - [Install](#install)
 - [Usage](#usage)
 
-## NPM package
+### NPM package
 
-## Install
+#### Install
 
 `npm install picker --save`
 
-## Usage
+### Usage
 
 With the Picker you can get files or folders from pCloud into your web app.
 
