@@ -13,12 +13,6 @@ The library provides easy way to upload file from URL to user's folder in pCloud
  * Chrome, Firefox, Safari, Internet Explorer 11 and Edge
  * Currently don't support mobile browsers
 
-## Table of Contents
-
-- [NPM package](www)
-- [Install](#install)
-- [Usage](#usage)
-
 ### NPM package
 
 #### Install
