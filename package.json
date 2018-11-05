@@ -1,7 +1,7 @@
 {
   "name": "pcloud-picker-js",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
     "pcloud-sdk-js": "^1.4.2",
