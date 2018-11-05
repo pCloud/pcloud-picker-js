@@ -316,10 +316,10 @@ const DefaultButton = styled.div`
   user-select: none;
 `;
 
-const ChooseButton = DefaultButton.extend`
+const ChooseButton = styled(DefaultButton)`
   width: 50px;
 `;
-const CancelButton = DefaultButton.extend`
+const CancelButton = styled(DefaultButton)`
   background: #ffffff;
   border: 1px solid #e9e9e9;
   color: #999;

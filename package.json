@@ -39,6 +39,7 @@
     "moduleNameMapper": {
       ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
     },
-    "setupTestFrameworkScriptFile": "./src/tests/enzymeReact.js"
+    "setupTestFrameworkScriptFile": "./src/tests/enzymeReact.js",
+    "testURL": "http://localhost"
   }
 }

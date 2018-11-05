@@ -2,7 +2,6 @@
 
 exports[`<Picker /> render <Picker /> renders component correctly 1`] = `
 ShallowWrapper {
-  "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <Picker
     getFolderContent={
@@ -22,6 +21,7 @@ ShallowWrapper {
     "batchedUpdates": [Function],
     "getNode": [Function],
     "render": [Function],
+    "simulateError": [Function],
     "simulateEvent": [Function],
     "unmount": [Function],
   },
@@ -675,16 +675,16 @@ ShallowWrapper {
           />
         </Picker__Section>,
         <Picker__Footer>
-          <Picker__DefaultButton
+          <Picker__CancelButton
             onClick={[Function]}
           >
             Cancel
-          </Picker__DefaultButton>
-          <Picker__DefaultButton
+          </Picker__CancelButton>
+          <Picker__ChooseButton
             onClick={[Function]}
           >
             Choose
-          </Picker__DefaultButton>
+          </Picker__ChooseButton>
         </Picker__Footer>,
       ],
     },
@@ -2002,16 +2002,16 @@ ShallowWrapper {
         "nodeType": "class",
         "props": Object {
           "children": Array [
-            <Picker__DefaultButton
+            <Picker__CancelButton
               onClick={[Function]}
             >
               Cancel
-            </Picker__DefaultButton>,
-            <Picker__DefaultButton
+            </Picker__CancelButton>,
+            <Picker__ChooseButton
               onClick={[Function]}
             >
               Choose
-            </Picker__DefaultButton>,
+            </Picker__ChooseButton>,
           ],
         },
         "ref": null,
@@ -2697,16 +2697,16 @@ ShallowWrapper {
             />
           </Picker__Section>,
           <Picker__Footer>
-            <Picker__DefaultButton
+            <Picker__CancelButton
               onClick={[Function]}
             >
               Cancel
-            </Picker__DefaultButton>
-            <Picker__DefaultButton
+            </Picker__CancelButton>
+            <Picker__ChooseButton
               onClick={[Function]}
             >
               Choose
-            </Picker__DefaultButton>
+            </Picker__ChooseButton>
           </Picker__Footer>,
         ],
       },
@@ -4024,16 +4024,16 @@ ShallowWrapper {
           "nodeType": "class",
           "props": Object {
             "children": Array [
-              <Picker__DefaultButton
+              <Picker__CancelButton
                 onClick={[Function]}
               >
                 Cancel
-              </Picker__DefaultButton>,
-              <Picker__DefaultButton
+              </Picker__CancelButton>,
+              <Picker__ChooseButton
                 onClick={[Function]}
               >
                 Choose
-              </Picker__DefaultButton>,
+              </Picker__ChooseButton>,
             ],
           },
           "ref": null,
@@ -4073,6 +4073,16 @@ ShallowWrapper {
     "adapter": ReactSixteenAdapter {
       "options": Object {
         "enableComponentDidUpdateOnSetState": true,
+        "lifecycles": Object {
+          "componentDidUpdate": Object {
+            "onSetState": true,
+          },
+          "getDerivedStateFromProps": true,
+          "getSnapshotBeforeUpdate": true,
+          "setState": Object {
+            "skipsComponentDidUpdateOnNullish": true,
+          },
+        },
       },
     },
   },
